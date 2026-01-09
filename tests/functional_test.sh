@@ -63,20 +63,29 @@ if [[ "$READY" -ne 1 ]]; then
     exit 1
 fi
 
-# 4. 发送测试请求
-echo "Sending request to http://127.0.0.1:3000/index.html ..."
-# 加上 -v 可以看到详细连接过程，方便调试
-HTTP_CODE=$(curl -o /dev/null -s -w "%{http_code}" http://127.0.0.1:3000/index.html)
+RESULT=0
 
-# 5. 验证结果
-if [ "$HTTP_CODE" -eq 200 ]; then
-    echo -e "${GREEN}Test Passed! Server returned HTTP 200.${NC}"
-    RESULT=0
+# 4.1 基本可用性：index.html 应该 200
+echo "Request: http://127.0.0.1:3000/index.html (expect 200)"
+HTTP_CODE=$(curl --max-time 3 -o /dev/null -s -w "%{http_code}" http://127.0.0.1:3000/index.html || true)
+if [[ "$HTTP_CODE" -ne 200 ]]; then
+    echo -e "${RED}FAILED: expected 200, got $HTTP_CODE${NC}"
+    RESULT=1
+fi
+
+# 4.2 负例：不存在资源应该 404
+echo "Request: http://127.0.0.1:3000/__ci_not_found__ (expect 404)"
+HTTP_CODE=$(curl --max-time 3 -o /dev/null -s -w "%{http_code}" http://127.0.0.1:3000/__ci_not_found__ || true)
+if [[ "$HTTP_CODE" -ne 404 ]]; then
+    echo -e "${RED}FAILED: expected 404, got $HTTP_CODE${NC}"
+    RESULT=1
+fi
+
+if [[ "$RESULT" -eq 0 ]]; then
+    echo -e "${GREEN}Functional tests passed.${NC}"
 else
-    echo -e "${RED}Test Failed! Server returned HTTP $HTTP_CODE${NC}"
     echo "--- server log (tail) ---"
     tail -n 200 "$LOG_FILE" || true
-    RESULT=1
 fi
 
 exit $RESULT
