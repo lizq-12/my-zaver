@@ -24,16 +24,19 @@ cleanup() {
 
 trap cleanup EXIT INT TERM
 
+BUILD_DIR="${BUILD_DIR:-build}"
+
 # 1. 智能查找可执行文件位置
-# 既然我们在根目录运行，通常 build 就在 ./build
-if [ -f "./build/zaver" ]; then
-    BIN_PATH="./build/zaver"
-elif [ -f "./build/src/zaver" ]; then
-    BIN_PATH="./build/src/zaver"
+# 既然我们在根目录运行，通常 build 就在 ./build；Sanitizer 可能是 ./build-asan
+if [ -f "./${BUILD_DIR}/zaver" ]; then
+    BIN_PATH="./${BUILD_DIR}/zaver"
+elif [ -f "./${BUILD_DIR}/src/zaver" ]; then
+    BIN_PATH="./${BUILD_DIR}/src/zaver"
 else
     echo -e "${RED}Error: Could not find 'zaver' executable!${NC}"
-    echo "Searching in ./build directory:"
-    find ./build -name "zaver"
+    echo "Hint: set BUILD_DIR=build or BUILD_DIR=build-asan"
+    echo "Searching under common build directories:"
+    find . -maxdepth 3 -type f -name zaver -print || true
     exit 1
 fi
 

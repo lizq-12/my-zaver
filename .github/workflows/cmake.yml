@@ -26,7 +26,7 @@ jobs:
       - name: Functional Test
         run: |
           chmod +x tests/functional_test.sh
-          ./tests/functional_test.sh
+          BUILD_DIR=build ./tests/functional_test.sh
 
   sanitize:
     runs-on: ubuntu-latest
@@ -50,4 +50,4 @@ jobs:
       - name: Functional Test (ASan)
         run: |
           chmod +x tests/functional_test.sh
-          ./tests/functional_test.sh
+          BUILD_DIR=build-asan ./tests/functional_test.sh
