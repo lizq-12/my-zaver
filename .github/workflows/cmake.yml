@@ -12,21 +12,19 @@ jobs:
 
     steps:
     # 1. 拉取代码
-    - uses: actions/checkout@v3
-
-    # 2. 安装依赖 (CI 环境需要 cmake)
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake
+    - uses: actions/checkout@v4
 
     # 3. 配置 CMake
     - name: Configure CMake
-      run: cmake -B build
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
     # 4. 编译项目
     - name: Build
-      run: cmake --build build
+      run: cmake --build build --parallel
+
+    # 4.5. 运行单元测试（ctest）
+    - name: Unit Tests
+      run: ctest --test-dir build --output-on-failure
 
     # 5. 运行功能测试
     - name: Run Functional Test
