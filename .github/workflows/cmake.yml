@@ -1,0 +1,35 @@
+name: Zaver CI
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. 拉取代码
+    - uses: actions/checkout@v3
+
+    # 2. 安装依赖 (CI 环境需要 cmake)
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake
+
+    # 3. 配置 CMake
+    - name: Configure CMake
+      run: cmake -B build
+
+    # 4. 编译项目
+    - name: Build
+      run: cmake --build build
+
+    # 5. 运行功能测试
+    - name: Run Functional Test
+      run: |
+        chmod +x tests/functional_test.sh
+        ./tests/functional_test.sh
