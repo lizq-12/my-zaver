@@ -23,7 +23,7 @@ fi
 echo "Found server binary at: $BIN_PATH"
 
 # 2. 启动服务器
-$BIN_PATH &
+$BIN_PATH -c zaver.conf &
 SERVER_PID=$!
 echo "Server started with PID $SERVER_PID"
 
