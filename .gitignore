@@ -4,3 +4,7 @@
 build/
 *_test
 tags
+html/big_64m.bin
+build/
+.idea/
+*.log
