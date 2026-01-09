@@ -1,0 +1,576 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/lizq/lizqpi/network_code/zaver/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+$(VERBOSE).SILENT	build/Makefile	/^$(VERBOSE).SILENT:$/;"	t
+$(VERBOSE).SILENT	build/tests/Makefile	/^$(VERBOSE).SILENT:$/;"	t
+$(VERBOSE)MAKESILENT	build/Makefile	/^$(VERBOSE)MAKESILENT = -s$/;"	m
+$(VERBOSE)MAKESILENT	build/tests/Makefile	/^$(VERBOSE)MAKESILENT = -s$/;"	m
+%	build/Makefile	/^% : %,v$/;"	t
+%	build/Makefile	/^% : RCS\/%$/;"	t
+%	build/Makefile	/^% : RCS\/%,v$/;"	t
+%	build/Makefile	/^% : SCCS\/s.%$/;"	t
+%	build/Makefile	/^% : s.%$/;"	t
+%	build/tests/Makefile	/^% : %,v$/;"	t
+%	build/tests/Makefile	/^% : RCS\/%$/;"	t
+%	build/tests/Makefile	/^% : RCS\/%,v$/;"	t
+%	build/tests/Makefile	/^% : SCCS\/s.%$/;"	t
+%	build/tests/Makefile	/^% : s.%$/;"	t
+ARCHITECTURE_ID	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#   define ARCHITECTURE_ID /;"	d	file:
+ARCHITECTURE_ID	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define ARCHITECTURE_ID /;"	d	file:
+ARCHITECTURE_ID	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define ARCHITECTURE_ID$/;"	d	file:
+ARCHITECTURE_ID	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#   define ARCHITECTURE_ID /;"	d	file:
+ARCHITECTURE_ID	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define ARCHITECTURE_ID /;"	d	file:
+ARCHITECTURE_ID	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define ARCHITECTURE_ID$/;"	d	file:
+BUFLEN	src/util.h	/^#define BUFLEN /;"	d
+CMAKE_BINARY_DIR	build/Makefile	/^CMAKE_BINARY_DIR = \/home\/lizq\/lizqpi\/network_code\/zaver\/build$/;"	m
+CMAKE_BINARY_DIR	build/tests/Makefile	/^CMAKE_BINARY_DIR = \/home\/lizq\/lizqpi\/network_code\/zaver\/build$/;"	m
+CMAKE_COMMAND	build/Makefile	/^CMAKE_COMMAND = \/usr\/bin\/cmake$/;"	m
+CMAKE_COMMAND	build/tests/Makefile	/^CMAKE_COMMAND = \/usr\/bin\/cmake$/;"	m
+CMAKE_SOURCE_DIR	build/Makefile	/^CMAKE_SOURCE_DIR = \/home\/lizq\/lizqpi\/network_code\/zaver$/;"	m
+CMAKE_SOURCE_DIR	build/tests/Makefile	/^CMAKE_SOURCE_DIR = \/home\/lizq\/lizqpi\/network_code\/zaver$/;"	m
+COMPILER_ID	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_ID /;"	d	file:
+COMPILER_ID	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_ID /;"	d	file:
+COMPILER_VERSION	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#   define COMPILER_VERSION /;"	d	file:
+COMPILER_VERSION	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#   define COMPILER_VERSION /;"	d	file:
+COMPILER_VERSION_INTERNAL	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#   define COMPILER_VERSION_INTERNAL /;"	d	file:
+COMPILER_VERSION_INTERNAL	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define COMPILER_VERSION_INTERNAL /;"	d	file:
+COMPILER_VERSION_INTERNAL	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_INTERNAL /;"	d	file:
+COMPILER_VERSION_INTERNAL	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#   define COMPILER_VERSION_INTERNAL /;"	d	file:
+COMPILER_VERSION_INTERNAL	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define COMPILER_VERSION_INTERNAL /;"	d	file:
+COMPILER_VERSION_INTERNAL	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_INTERNAL /;"	d	file:
+COMPILER_VERSION_INTERNAL_STR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_INTERNAL_STR /;"	d	file:
+COMPILER_VERSION_INTERNAL_STR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_INTERNAL_STR /;"	d	file:
+COMPILER_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^  # define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#   define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^  # define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#   define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^  # define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#   define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^  # define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#   define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^  # define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#   define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^  # define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#   define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_TWEAK	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define COMPILER_VERSION_TWEAK /;"	d	file:
+COMPILER_VERSION_TWEAK	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_TWEAK /;"	d	file:
+COMPILER_VERSION_TWEAK	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define COMPILER_VERSION_TWEAK /;"	d	file:
+COMPILER_VERSION_TWEAK	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_TWEAK /;"	d	file:
+CONF	src/zaver.c	/^#define CONF /;"	d	file:
+CR	src/http_parse.h	/^#define CR /;"	d
+CRLFCRLF	src/http_parse.h	/^#define CRLFCRLF /;"	d
+CXX_STD	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#      define CXX_STD /;"	d	file:
+CXX_STD	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#    define CXX_STD /;"	d	file:
+CXX_STD	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define CXX_STD /;"	d	file:
+C_VERSION	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define C_VERSION /;"	d	file:
+C_VERSION	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define C_VERSION$/;"	d	file:
+C_VERSION	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define C_VERSION /;"	d	file:
+DBG_H	src/dbg.h	/^#define DBG_H$/;"	d
+DEC	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#define DEC(/;"	d	file:
+DEC	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#define DEC(/;"	d	file:
+DELIM	src/util.h	/^#define DELIM /;"	d
+EPOLL_H	src/epoll.h	/^#define EPOLL_H$/;"	d
+EQUALS	build/Makefile	/^EQUALS = =$/;"	m
+EQUALS	build/tests/Makefile	/^EQUALS = =$/;"	m
+ERROR_H	src/error.h	/^#define ERROR_H$/;"	d
+HEX	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#define HEX(/;"	d	file:
+HEX	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#define HEX(/;"	d	file:
+HTTP_H	src/http.h	/^#define HTTP_H$/;"	d
+HTTP_PARSE_H	src/http_parse.h	/^#define HTTP_PARSE_H$/;"	d
+HTTP_REQUEST_H	src/http_request.h	/^#define HTTP_REQUEST_H$/;"	d
+ID_VOID_MAIN	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define ID_VOID_MAIN$/;"	d	file:
+INIT_LIST_HEAD	src/list.h	/^#define INIT_LIST_HEAD(/;"	d
+LF	src/http_parse.h	/^#define LF /;"	d
+LISTENQ	src/util.h	/^#define LISTENQ /;"	d
+MAXEVENTS	src/epoll.h	/^#define MAXEVENTS /;"	d
+MAXLINE	src/http.h	/^#define MAXLINE /;"	d
+MAX_BUF	src/http_request.h	/^#define MAX_BUF /;"	d
+MIN	src/util.h	/^#define MIN(/;"	d
+NULL	src/list.h	/^#define NULL /;"	d
+PLATFORM_ID	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define PLATFORM_ID /;"	d	file:
+PLATFORM_ID	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define PLATFORM_ID$/;"	d	file:
+PLATFORM_ID	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define PLATFORM_ID /;"	d	file:
+PLATFORM_ID	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define PLATFORM_ID$/;"	d	file:
+PLATFORM_ID	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define PLATFORM_ID /;"	d	file:
+PLATFORM_ID	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define PLATFORM_ID$/;"	d	file:
+PLATFORM_ID	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define PLATFORM_ID /;"	d	file:
+PLATFORM_ID	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define PLATFORM_ID$/;"	d	file:
+PRIORITY_QUEUE_H	src/priority_queue.h	/^#define PRIORITY_QUEUE_H$/;"	d
+PROGRAM_VERSION	src/zaver.c	/^#define PROGRAM_VERSION /;"	d	file:
+RIO_BUFSIZE	src/rio.h	/^#define RIO_BUFSIZE /;"	d
+RIO_H	src/rio.h	/^#define RIO_H$/;"	d
+RM	build/Makefile	/^RM = \/usr\/bin\/cmake -E rm -f$/;"	m
+RM	build/tests/Makefile	/^RM = \/usr\/bin\/cmake -E rm -f$/;"	m
+ROOT	src/http.c	/^static char *ROOT = NULL;$/;"	v	typeref:typename:char *	file:
+SHELL	build/Makefile	/^SHELL = \/bin\/sh$/;"	m
+SHELL	build/tests/Makefile	/^SHELL = \/bin\/sh$/;"	m
+SHORTLINE	src/http.h	/^#define SHORTLINE /;"	d
+SIMULATE_ID	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define SIMULATE_ID /;"	d	file:
+SIMULATE_ID	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define SIMULATE_ID /;"	d	file:
+SIMULATE_ID	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define SIMULATE_ID /;"	d	file:
+SIMULATE_ID	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define SIMULATE_ID /;"	d	file:
+SIMULATE_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define SIMULATE_VERSION_MAJOR /;"	d	file:
+SIMULATE_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define SIMULATE_VERSION_MAJOR /;"	d	file:
+SIMULATE_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define SIMULATE_VERSION_MAJOR /;"	d	file:
+SIMULATE_VERSION_MAJOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define SIMULATE_VERSION_MAJOR /;"	d	file:
+SIMULATE_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define SIMULATE_VERSION_MINOR /;"	d	file:
+SIMULATE_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define SIMULATE_VERSION_MINOR /;"	d	file:
+SIMULATE_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define SIMULATE_VERSION_MINOR /;"	d	file:
+SIMULATE_VERSION_MINOR	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define SIMULATE_VERSION_MINOR /;"	d	file:
+SIMULATE_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define SIMULATE_VERSION_PATCH /;"	d	file:
+SIMULATE_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define SIMULATE_VERSION_PATCH /;"	d	file:
+SIMULATE_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define SIMULATE_VERSION_PATCH /;"	d	file:
+SIMULATE_VERSION_PATCH	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define SIMULATE_VERSION_PATCH /;"	d	file:
+STRINGIFY	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#define STRINGIFY(/;"	d	file:
+STRINGIFY	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#define STRINGIFY(/;"	d	file:
+STRINGIFY_HELPER	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#define STRINGIFY_HELPER(/;"	d	file:
+STRINGIFY_HELPER	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#define STRINGIFY_HELPER(/;"	d	file:
+THREADPOOL_H	src/threadpool.h	/^#define THREADPOOL_H$/;"	d
+THREAD_NUM	src/threadpool.h	/^#define THREAD_NUM /;"	d
+THREAD_NUM	tests/thread_pool_test.c	/^#define THREAD_NUM /;"	d	file:
+TIMEOUT_DEFAULT	src/timer.h	/^#define TIMEOUT_DEFAULT /;"	d
+UTIL_H	src/util.h	/^#define UTIL_H$/;"	d
+ZV_AGAIN	src/http_request.h	/^#define ZV_AGAIN /;"	d
+ZV_CONF_ERROR	src/util.h	/^#define ZV_CONF_ERROR /;"	d
+ZV_CONF_OK	src/util.h	/^#define ZV_CONF_OK /;"	d
+ZV_ERROR	src/error.h	/^#define ZV_ERROR /;"	d
+ZV_HTTP_GET	src/http_request.h	/^#define ZV_HTTP_GET /;"	d
+ZV_HTTP_HEAD	src/http_request.h	/^#define ZV_HTTP_HEAD /;"	d
+ZV_HTTP_NOT_FOUND	src/http_request.h	/^#define ZV_HTTP_NOT_FOUND /;"	d
+ZV_HTTP_NOT_MODIFIED	src/http_request.h	/^#define ZV_HTTP_NOT_MODIFIED /;"	d
+ZV_HTTP_OK	src/http_request.h	/^#define ZV_HTTP_OK /;"	d
+ZV_HTTP_PARSE_INVALID_HEADER	src/http_request.h	/^#define ZV_HTTP_PARSE_INVALID_HEADER /;"	d
+ZV_HTTP_PARSE_INVALID_METHOD	src/http_request.h	/^#define ZV_HTTP_PARSE_INVALID_METHOD /;"	d
+ZV_HTTP_PARSE_INVALID_REQUEST	src/http_request.h	/^#define ZV_HTTP_PARSE_INVALID_REQUEST /;"	d
+ZV_HTTP_POST	src/http_request.h	/^#define ZV_HTTP_POST /;"	d
+ZV_HTTP_UNKNOWN	src/http_request.h	/^#define ZV_HTTP_UNKNOWN /;"	d
+ZV_LIST_H	src/list.h	/^#define ZV_LIST_H$/;"	d
+ZV_OK	src/error.h	/^#define ZV_OK /;"	d
+ZV_PQ_DEFAULT_SIZE	src/priority_queue.h	/^#define ZV_PQ_DEFAULT_SIZE /;"	d
+ZV_TIMER_H	src/timer.h	/^#define ZV_TIMER_H$/;"	d
+ZV_TIMER_INFINITE	src/timer.h	/^#define ZV_TIMER_INFINITE /;"	d
+_GNU_SOURCE	src/http_request.c	/^#define _GNU_SOURCE$/;"	d	file:
+__/src/priority_queue.c.i	build/tests/Makefile	/^__\/src\/priority_queue.c.i:$/;"	t
+__/src/priority_queue.c.o	build/tests/Makefile	/^__\/src\/priority_queue.c.o:$/;"	t
+__/src/priority_queue.c.s	build/tests/Makefile	/^__\/src\/priority_queue.c.s:$/;"	t
+__/src/priority_queue.i	build/tests/Makefile	/^__\/src\/priority_queue.i: __\/src\/priority_queue.c.i$/;"	t
+__/src/priority_queue.o	build/tests/Makefile	/^__\/src\/priority_queue.o: __\/src\/priority_queue.c.o$/;"	t
+__/src/priority_queue.s	build/tests/Makefile	/^__\/src\/priority_queue.s: __\/src\/priority_queue.c.s$/;"	t
+__/src/threadpool.c.i	build/tests/Makefile	/^__\/src\/threadpool.c.i:$/;"	t
+__/src/threadpool.c.o	build/tests/Makefile	/^__\/src\/threadpool.c.o:$/;"	t
+__/src/threadpool.c.s	build/tests/Makefile	/^__\/src\/threadpool.c.s:$/;"	t
+__/src/threadpool.i	build/tests/Makefile	/^__\/src\/threadpool.i: __\/src\/threadpool.c.i$/;"	t
+__/src/threadpool.o	build/tests/Makefile	/^__\/src\/threadpool.o: __\/src\/threadpool.c.o$/;"	t
+__/src/threadpool.s	build/tests/Makefile	/^__\/src\/threadpool.s: __\/src\/threadpool.c.s$/;"	t
+__anon0c09c0180108	src/priority_queue.h	/^typedef struct {$/;"	s
+__anon2d8b0e3f0103	src/threadpool.c	/^typedef enum {$/;"	g	file:
+__anon2d8b0e440108	src/threadpool.h	/^typedef struct {$/;"	s
+__anon2d8b0e440203	src/threadpool.h	/^typedef enum {$/;"	g
+__anon9d8268730108	tests/list_test.c	/^typedef struct {$/;"	s	file:
+__anon9d8268730208	tests/list_test.c	/^typedef struct {$/;"	s	file:
+__anona25ba9ba0108	src/http_request.h	/^typedef struct {$/;"	s
+__anona25ba9ba0208	src/http_request.h	/^typedef struct {$/;"	s
+__anonb6066a3c0108	src/rio.h	/^typedef struct {$/;"	s
+__anoncc5b55270103	src/http_parse.c	/^    enum {$/;"	g	function:zv_http_parse_request_line	file:
+__anoncc5b55270203	src/http_parse.c	/^    enum {$/;"	g	function:zv_http_parse_request_body	file:
+__has_include	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^#  define __has_include(/;"	d	file:
+__has_include	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define __has_include(/;"	d	file:
+__list_add	src/list.h	/^static inline void __list_add(struct list_head *_new, struct list_head *prev, struct list_head */;"	f	typeref:typename:void
+__list_del	src/list.h	/^static inline void __list_del(struct list_head *prev, struct list_head *next) {$/;"	f	typeref:typename:void
+add_node	tests/list_test.c	/^void add_node(void *arg, list_head *head) {$/;"	f	typeref:typename:void
+all	build/Makefile	/^all: cmake_check_build_system$/;"	t
+all	build/tests/Makefile	/^all: cmake_check_build_system$/;"	t
+arg	src/threadpool.h	/^    void *arg;$/;"	m	struct:zv_task_s	typeref:typename:void *
+arg	tests/list_test.c	/^    void *arg;$/;"	m	struct:__anon9d8268730108	typeref:typename:void *	file:
+arg1	tests/list_test.c	/^    void *arg1;$/;"	m	struct:__anon9d8268730208	typeref:typename:void *	file:
+arg2	tests/list_test.c	/^    void *arg2;$/;"	m	struct:__anon9d8268730208	typeref:typename:void *	file:
+arg3	tests/list_test.c	/^    void *arg3;$/;"	m	struct:__anon9d8268730208	typeref:typename:void *	file:
+buf	src/http_request.h	/^    char buf[MAX_BUF];  \/* ring buffer *\/$/;"	m	struct:zv_http_request_s	typeref:typename:char[]
+check	src/dbg.h	/^#define check(/;"	d
+check_debug	src/dbg.h	/^#define check_debug(/;"	d
+check_exit	src/dbg.h	/^#define check_exit(/;"	d
+clean	build/Makefile	/^clean:$/;"	t
+clean	build/tests/Makefile	/^clean:$/;"	t
+clean/fast	build/Makefile	/^clean\/fast: clean$/;"	t
+clean/fast	build/tests/Makefile	/^clean\/fast: clean$/;"	t
+clean_errno	src/dbg.h	/^#define clean_errno(/;"	d
+cmake_check_build_system	build/Makefile	/^cmake_check_build_system:$/;"	t
+cmake_check_build_system	build/tests/Makefile	/^cmake_check_build_system:$/;"	t
+cmake_force	build/Makefile	/^cmake_force:$/;"	t
+cmake_force	build/tests/Makefile	/^cmake_force:$/;"	t
+comp	src/priority_queue.h	/^    zv_pq_comparator_pt comp;$/;"	m	struct:__anon0c09c0180108	typeref:typename:zv_pq_comparator_pt
+comp	tests/priority_queue_test.c	/^static int comp(void *i, void *j) {$/;"	f	typeref:typename:int	file:
+cond	src/threadpool.h	/^    pthread_cond_t cond;$/;"	m	struct:__anon2d8b0e440108	typeref:typename:pthread_cond_t
+const	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define const$/;"	d	file:
+container_of	src/list.h	/^#define container_of(/;"	d
+cur_header_key_end	src/http_request.h	/^    void *cur_header_key_end;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+cur_header_key_start	src/http_request.h	/^    void *cur_header_key_start;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+cur_header_value_end	src/http_request.h	/^    void *cur_header_value_end;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+cur_header_value_start	src/http_request.h	/^    void *cur_header_value_start;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+debug	src/dbg.h	/^#define debug(/;"	d
+default_target	build/Makefile	/^default_target: all$/;"	t
+default_target	build/tests/Makefile	/^default_target: all$/;"	t
+del_node	tests/list_test.c	/^void del_node(list_head *entry) {$/;"	f	typeref:typename:void
+deleted	src/timer.h	/^    int deleted;    \/* if remote client close the socket first, set deleted to 1 *\/$/;"	m	struct:zv_timer_node_s	typeref:typename:int
+depend	build/Makefile	/^depend:$/;"	t
+depend	build/tests/Makefile	/^depend:$/;"	t
+display	tests/list_test.c	/^void display(list_head *head) {$/;"	f	typeref:typename:void
+do_error	src/http.c	/^static void do_error(int fd, char *cause, char *errnum, char *shortmsg, char *longmsg)$/;"	f	typeref:typename:void	file:
+do_request	src/http.c	/^void do_request(void *ptr) {$/;"	f	typeref:typename:void
+edit_cache	build/Makefile	/^edit_cache:$/;"	t
+edit_cache	build/tests/Makefile	/^edit_cache:$/;"	t
+edit_cache/fast	build/Makefile	/^edit_cache\/fast: edit_cache$/;"	t
+edit_cache/fast	build/tests/Makefile	/^edit_cache\/fast: edit_cache$/;"	t
+epfd	src/http_request.h	/^    int epfd;$/;"	m	struct:zv_http_request_s	typeref:typename:int
+events	src/epoll.c	/^struct epoll_event *events;$/;"	v	typeref:struct:epoll_event *
+exch	src/priority_queue.c	/^static void exch(zv_pq_t *zv_pq, size_t i, size_t j) {$/;"	f	typeref:typename:void	file:
+fd	src/http_request.h	/^    int fd;$/;"	m	struct:__anona25ba9ba0108	typeref:typename:int
+fd	src/http_request.h	/^    int fd;$/;"	m	struct:zv_http_request_s	typeref:typename:int
+func	src/threadpool.h	/^    void (*func)(void *);$/;"	m	struct:zv_task_s	typeref:typename:void (*)(void *)
+get_file_type	src/http.c	/^static const char* get_file_type(const char *type)$/;"	f	typeref:typename:const char *	file:
+get_shortmsg_from_status_code	src/http_request.c	/^const char *get_shortmsg_from_status_code(int status_code) {$/;"	f	typeref:typename:const char *
+graceful_shutdown	src/threadpool.c	/^    graceful_shutdown = 2$/;"	e	enum:__anon2d8b0e3f0103	file:
+handler	src/http_request.h	/^    zv_http_header_handler_pt handler;$/;"	m	struct:__anona25ba9ba0208	typeref:typename:zv_http_header_handler_pt
+handler	src/timer.h	/^    timer_handler_pt handler;$/;"	m	struct:zv_timer_node_s	typeref:typename:timer_handler_pt
+head	src/threadpool.h	/^    zv_task_t *head;$/;"	m	struct:__anon2d8b0e440108	typeref:typename:zv_task_t *
+help	build/Makefile	/^help:$/;"	t
+help	build/tests/Makefile	/^help:$/;"	t
+http_major	src/http_request.h	/^    int http_major;$/;"	m	struct:zv_http_request_s	typeref:typename:int
+http_minor	src/http_request.h	/^    int http_minor;$/;"	m	struct:zv_http_request_s	typeref:typename:int
+immediate_shutdown	src/threadpool.c	/^    immediate_shutdown = 1,$/;"	e	enum:__anon2d8b0e3f0103	file:
+info_arch	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v	typeref:typename:char const *
+info_arch	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v	typeref:typename:char const *
+info_compiler	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";$/;"	v	typeref:typename:char const *
+info_compiler	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";$/;"	v	typeref:typename:char const *
+info_cray	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const *info_cray = "INFO" ":" "compiler_wrapper[CrayPrgEnv]";$/;"	v	typeref:typename:char const *
+info_cray	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const *info_cray = "INFO" ":" "compiler_wrapper[CrayPrgEnv]";$/;"	v	typeref:typename:char const *
+info_language_extensions_default	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^const char* info_language_extensions_default = "INFO" ":" "extensions_default["$/;"	v	typeref:typename:const char *
+info_language_extensions_default	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^const char* info_language_extensions_default = "INFO" ":" "extensions_default["$/;"	v	typeref:typename:const char *
+info_language_standard_default	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^const char* info_language_standard_default =$/;"	v	typeref:typename:const char *
+info_language_standard_default	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^const char* info_language_standard_default = "INFO" ":" "standard_default["$/;"	v	typeref:typename:const char *
+info_platform	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";$/;"	v	typeref:typename:char const *
+info_platform	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";$/;"	v	typeref:typename:char const *
+info_simulate	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const* info_simulate = "INFO" ":" "simulate[" SIMULATE_ID "]";$/;"	v	typeref:typename:char const *
+info_simulate	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_simulate = "INFO" ":" "simulate[" SIMULATE_ID "]";$/;"	v	typeref:typename:char const *
+info_simulate_version	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const info_simulate_version[] = {$/;"	v	typeref:typename:char const[]
+info_simulate_version	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const info_simulate_version[] = {$/;"	v	typeref:typename:char const[]
+info_version	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const info_version[] = {$/;"	v	typeref:typename:char const[]
+info_version	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const* info_version = "INFO" ":" "compiler_version[" COMPILER_VERSION "]";$/;"	v	typeref:typename:char const *
+info_version	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const info_version[] = {$/;"	v	typeref:typename:char const[]
+info_version	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_version = "INFO" ":" "compiler_version[" COMPILER_VERSION "]";$/;"	v	typeref:typename:char const *
+info_version_internal	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const info_version_internal[] = {$/;"	v	typeref:typename:char const[]
+info_version_internal	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const* info_version_internal = "INFO" ":" "compiler_version_internal[" COMPILER_VERSION_INT/;"	v	typeref:typename:char const *
+info_version_internal	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const info_version_internal[] = {$/;"	v	typeref:typename:char const[]
+info_version_internal	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_version_internal = "INFO" ":" "compiler_version_internal[" COMPILER_VERSION_INT/;"	v	typeref:typename:char const *
+keep_alive	src/http_request.h	/^    int keep_alive;$/;"	m	struct:__anona25ba9ba0108	typeref:typename:int
+key	src/timer.h	/^    size_t key;$/;"	m	struct:zv_timer_node_s	typeref:typename:size_t
+key_end	src/http_request.h	/^    void *key_start, *key_end;          \/* not include end *\/$/;"	m	struct:zv_http_header_s	typeref:typename:void *
+key_start	src/http_request.h	/^    void *key_start, *key_end;          \/* not include end *\/$/;"	m	struct:zv_http_header_s	typeref:typename:void *
+last	src/http_request.h	/^    size_t pos, last;$/;"	m	struct:zv_http_request_s	typeref:typename:size_t
+list	src/http_request.h	/^    list_head list;$/;"	m	struct:zv_http_header_s	typeref:typename:list_head
+list	src/http_request.h	/^    struct list_head list;  \/* store http header *\/$/;"	m	struct:zv_http_request_s	typeref:struct:list_head
+list	tests/list_test.c	/^    list_head list;  $/;"	m	struct:__anon9d8268730108	typeref:typename:list_head	file:
+list	tests/list_test.c	/^    list_head list;$/;"	m	struct:__anon9d8268730208	typeref:typename:list_head	file:
+list_add	src/list.h	/^static inline void list_add(struct list_head *_new, struct list_head *head) {$/;"	f	typeref:typename:void
+list_add_tail	src/list.h	/^static inline void list_add_tail(struct list_head *_new, struct list_head *head) {$/;"	f	typeref:typename:void
+list_del	src/list.h	/^static inline void list_del(struct list_head *entry) {$/;"	f	typeref:typename:void
+list_empty	src/list.h	/^static inline int list_empty(struct list_head *head) {$/;"	f	typeref:typename:int
+list_entry	src/list.h	/^#define list_entry(/;"	d
+list_for_each	src/list.h	/^#define list_for_each(/;"	d
+list_for_each_prev	src/list.h	/^#define list_for_each_prev(/;"	d
+list_head	src/list.h	/^struct list_head {$/;"	s
+list_head	src/list.h	/^typedef struct list_head list_head;$/;"	t	typeref:struct:list_head
+list_test	build/Makefile	/^list_test: cmake_check_build_system$/;"	t
+list_test	build/tests/Makefile	/^list_test: tests\/CMakeFiles\/list_test.dir\/rule$/;"	t
+list_test.c.i	build/tests/Makefile	/^list_test.c.i:$/;"	t
+list_test.c.o	build/tests/Makefile	/^list_test.c.o:$/;"	t
+list_test.c.s	build/tests/Makefile	/^list_test.c.s:$/;"	t
+list_test.i	build/tests/Makefile	/^list_test.i: list_test.c.i$/;"	t
+list_test.o	build/tests/Makefile	/^list_test.o: list_test.c.o$/;"	t
+list_test.s	build/tests/Makefile	/^list_test.s: list_test.c.s$/;"	t
+list_test/fast	build/Makefile	/^list_test\/fast:$/;"	t
+list_test/fast	build/tests/Makefile	/^list_test\/fast:$/;"	t
+lock	src/threadpool.h	/^    pthread_mutex_t lock;$/;"	m	struct:__anon2d8b0e440108	typeref:typename:pthread_mutex_t
+lock	tests/thread_pool_test.c	/^pthread_mutex_t lock;$/;"	v	typeref:typename:pthread_mutex_t
+log_err	src/dbg.h	/^#define log_err(/;"	d
+log_info	src/dbg.h	/^#define log_info(/;"	d
+log_warn	src/dbg.h	/^#define log_warn(/;"	d
+long_options	src/zaver.c	/^static const struct option long_options[]=$/;"	v	typeref:typename:const struct option[]	file:
+main	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^int main(argc, argv) int argc; char *argv[];$/;"	f
+main	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^void main() {}$/;"	f	typeref:typename:void
+main	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^int main(int argc, char* argv[])$/;"	f	typeref:typename:int
+main	src/zaver.c	/^int main(int argc, char* argv[]) {$/;"	f	typeref:typename:int
+main	tests/list_test.c	/^int main() {$/;"	f	typeref:typename:int
+main	tests/priority_queue_test.c	/^int main() {$/;"	f	typeref:typename:int
+main	tests/thread_pool_test.c	/^int main() {$/;"	f	typeref:typename:int
+make_socket_non_blocking	src/util.c	/^int make_socket_non_blocking(int fd) {$/;"	f	typeref:typename:int
+method	src/http_request.h	/^    int method;$/;"	m	struct:zv_http_request_s	typeref:typename:int
+method_end	src/http_request.h	/^    void *method_end;   \/* not include method_end*\/$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+mime_type_s	src/http.h	/^typedef struct mime_type_s {$/;"	s
+mime_type_t	src/http.h	/^} mime_type_t;$/;"	t	typeref:struct:mime_type_s
+modified	src/http_request.h	/^    int modified;       \/* compare If-modified-since field with mtime to decide whether the fil/;"	m	struct:__anona25ba9ba0108	typeref:typename:int
+mtime	src/http_request.h	/^    time_t mtime;       \/* the modified time of the file*\/$/;"	m	struct:__anona25ba9ba0108	typeref:typename:time_t
+nalloc	src/priority_queue.h	/^    size_t nalloc;$/;"	m	struct:__anon0c09c0180108	typeref:typename:size_t
+name	src/http_request.h	/^    char *name;$/;"	m	struct:__anona25ba9ba0208	typeref:typename:char *
+next	src/list.h	/^    struct list_head *prev, *next;$/;"	m	struct:list_head	typeref:struct:list_head *
+next	src/threadpool.h	/^    struct zv_task_s *next;$/;"	m	struct:zv_task_s	typeref:struct:zv_task_s *
+offsetof	src/list.h	/^#define offsetof(/;"	d
+open_listenfd	src/util.c	/^int open_listenfd(int port) $/;"	f	typeref:typename:int
+parse_uri	src/http.c	/^static void parse_uri(char *uri, int uri_length, char *filename, char *querystring) {$/;"	f	typeref:typename:void	file:
+path_end	src/http_request.h	/^    void *path_end;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+path_start	src/http_request.h	/^    void *path_start;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+port	src/util.h	/^    int port;$/;"	m	struct:zv_conf_s	typeref:typename:int
+pos	src/http_request.h	/^    size_t pos, last;$/;"	m	struct:zv_http_request_s	typeref:typename:size_t
+pq	src/priority_queue.h	/^    void **pq;$/;"	m	struct:__anon0c09c0180108	typeref:typename:void **
+preinstall	build/Makefile	/^preinstall: all$/;"	t
+preinstall	build/tests/Makefile	/^preinstall: all$/;"	t
+preinstall/fast	build/Makefile	/^preinstall\/fast:$/;"	t
+preinstall/fast	build/tests/Makefile	/^preinstall\/fast:$/;"	t
+prev	src/list.h	/^    struct list_head *prev, *next;$/;"	m	struct:list_head	typeref:struct:list_head *
+priority_queue_test	build/Makefile	/^priority_queue_test: cmake_check_build_system$/;"	t
+priority_queue_test	build/tests/Makefile	/^priority_queue_test: tests\/CMakeFiles\/priority_queue_test.dir\/rule$/;"	t
+priority_queue_test.c.i	build/tests/Makefile	/^priority_queue_test.c.i:$/;"	t
+priority_queue_test.c.o	build/tests/Makefile	/^priority_queue_test.c.o:$/;"	t
+priority_queue_test.c.s	build/tests/Makefile	/^priority_queue_test.c.s:$/;"	t
+priority_queue_test.i	build/tests/Makefile	/^priority_queue_test.i: priority_queue_test.c.i$/;"	t
+priority_queue_test.o	build/tests/Makefile	/^priority_queue_test.o: priority_queue_test.c.o$/;"	t
+priority_queue_test.s	build/tests/Makefile	/^priority_queue_test.s: priority_queue_test.c.s$/;"	t
+priority_queue_test/fast	build/Makefile	/^priority_queue_test\/fast:$/;"	t
+priority_queue_test/fast	build/tests/Makefile	/^priority_queue_test\/fast:$/;"	t
+qnxnto	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v	typeref:typename:char const *
+qnxnto	build/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v	typeref:typename:char const *
+query_end	src/http_request.h	/^    void *query_end;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+query_start	src/http_request.h	/^    void *query_start;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+queue_size	src/threadpool.h	/^    int queue_size;$/;"	m	struct:__anon2d8b0e440108	typeref:typename:int
+read_conf	src/util.c	/^int read_conf(char *filename, zv_conf_t *cf, char *buf, int len) {$/;"	f	typeref:typename:int
+rebuild_cache	build/Makefile	/^rebuild_cache:$/;"	t
+rebuild_cache	build/tests/Makefile	/^rebuild_cache:$/;"	t
+rebuild_cache/fast	build/Makefile	/^rebuild_cache\/fast: rebuild_cache$/;"	t
+rebuild_cache/fast	build/tests/Makefile	/^rebuild_cache\/fast: rebuild_cache$/;"	t
+request_end	src/http_request.h	/^    void *request_end;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+request_start	src/http_request.h	/^    void *request_start;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+resize	src/priority_queue.c	/^static int resize(zv_pq_t *zv_pq, size_t new_size) {$/;"	f	typeref:typename:int	file:
+resultdata	tests/priority_queue_test.c	/^size_t resultdata[] = {11, 24, 46, 48, 64, 72, 78, 89, 100, 106, 110, 112, 121, 122, 141, 155, 1/;"	v	typeref:typename:size_t[]
+rio_buf	src/rio.h	/^    char rio_buf[RIO_BUFSIZE]; \/* internal buffer *\/$/;"	m	struct:__anonb6066a3c0108	typeref:typename:char[]
+rio_bufptr	src/rio.h	/^    char *rio_bufptr;       \/* next unread byte in internal buf *\/$/;"	m	struct:__anonb6066a3c0108	typeref:typename:char *
+rio_cnt	src/rio.h	/^    ssize_t rio_cnt;        \/* unread bytes in internal buf *\/$/;"	m	struct:__anonb6066a3c0108	typeref:typename:ssize_t
+rio_fd	src/rio.h	/^    int rio_fd;             \/* descriptor for this internal buf *\/$/;"	m	struct:__anonb6066a3c0108	typeref:typename:int
+rio_read	src/rio.c	/^static ssize_t rio_read(rio_t *rp, char *usrbuf, size_t n)$/;"	f	typeref:typename:ssize_t	file:
+rio_readinitb	src/rio.c	/^void rio_readinitb(rio_t *rp, int fd) $/;"	f	typeref:typename:void
+rio_readlineb	src/rio.c	/^ssize_t rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen) $/;"	f	typeref:typename:ssize_t
+rio_readn	src/rio.c	/^ssize_t rio_readn(int fd, void *usrbuf, size_t n) $/;"	f	typeref:typename:ssize_t
+rio_readnb	src/rio.c	/^ssize_t rio_readnb(rio_t *rp, void *usrbuf, size_t n) $/;"	f	typeref:typename:ssize_t
+rio_t	src/rio.h	/^} rio_t;$/;"	t	typeref:struct:__anonb6066a3c0108
+rio_writen	src/rio.c	/^ssize_t rio_writen(int fd, void *usrbuf, size_t n) $/;"	f	typeref:typename:ssize_t
+root	src/http_request.h	/^    void *root;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+root	src/util.h	/^    void *root;$/;"	m	struct:zv_conf_s	typeref:typename:void *
+rq	src/timer.h	/^    zv_http_request_t *rq;$/;"	m	struct:zv_timer_node_s	typeref:typename:zv_http_request_t *
+serve_static	src/http.c	/^static void serve_static(int fd, char *filename, size_t filesize, zv_http_out_t *out) {$/;"	f	typeref:typename:void	file:
+shutdown	src/threadpool.h	/^    int shutdown;$/;"	m	struct:__anon2d8b0e440108	typeref:typename:int
+sink	src/priority_queue.c	/^static size_t sink(zv_pq_t *zv_pq, size_t k) {$/;"	f	typeref:typename:size_t	file:
+size	src/priority_queue.h	/^    size_t size;$/;"	m	struct:__anon0c09c0180108	typeref:typename:size_t
+src/epoll.c.i	build/Makefile	/^src\/epoll.c.i:$/;"	t
+src/epoll.c.o	build/Makefile	/^src\/epoll.c.o:$/;"	t
+src/epoll.c.s	build/Makefile	/^src\/epoll.c.s:$/;"	t
+src/epoll.i	build/Makefile	/^src\/epoll.i: src\/epoll.c.i$/;"	t
+src/epoll.o	build/Makefile	/^src\/epoll.o: src\/epoll.c.o$/;"	t
+src/epoll.s	build/Makefile	/^src\/epoll.s: src\/epoll.c.s$/;"	t
+src/http.c.i	build/Makefile	/^src\/http.c.i:$/;"	t
+src/http.c.o	build/Makefile	/^src\/http.c.o:$/;"	t
+src/http.c.s	build/Makefile	/^src\/http.c.s:$/;"	t
+src/http.i	build/Makefile	/^src\/http.i: src\/http.c.i$/;"	t
+src/http.o	build/Makefile	/^src\/http.o: src\/http.c.o$/;"	t
+src/http.s	build/Makefile	/^src\/http.s: src\/http.c.s$/;"	t
+src/http_parse.c.i	build/Makefile	/^src\/http_parse.c.i:$/;"	t
+src/http_parse.c.o	build/Makefile	/^src\/http_parse.c.o:$/;"	t
+src/http_parse.c.s	build/Makefile	/^src\/http_parse.c.s:$/;"	t
+src/http_parse.i	build/Makefile	/^src\/http_parse.i: src\/http_parse.c.i$/;"	t
+src/http_parse.o	build/Makefile	/^src\/http_parse.o: src\/http_parse.c.o$/;"	t
+src/http_parse.s	build/Makefile	/^src\/http_parse.s: src\/http_parse.c.s$/;"	t
+src/http_request.c.i	build/Makefile	/^src\/http_request.c.i:$/;"	t
+src/http_request.c.o	build/Makefile	/^src\/http_request.c.o:$/;"	t
+src/http_request.c.s	build/Makefile	/^src\/http_request.c.s:$/;"	t
+src/http_request.i	build/Makefile	/^src\/http_request.i: src\/http_request.c.i$/;"	t
+src/http_request.o	build/Makefile	/^src\/http_request.o: src\/http_request.c.o$/;"	t
+src/http_request.s	build/Makefile	/^src\/http_request.s: src\/http_request.c.s$/;"	t
+src/priority_queue.c.i	build/Makefile	/^src\/priority_queue.c.i:$/;"	t
+src/priority_queue.c.o	build/Makefile	/^src\/priority_queue.c.o:$/;"	t
+src/priority_queue.c.s	build/Makefile	/^src\/priority_queue.c.s:$/;"	t
+src/priority_queue.i	build/Makefile	/^src\/priority_queue.i: src\/priority_queue.c.i$/;"	t
+src/priority_queue.o	build/Makefile	/^src\/priority_queue.o: src\/priority_queue.c.o$/;"	t
+src/priority_queue.s	build/Makefile	/^src\/priority_queue.s: src\/priority_queue.c.s$/;"	t
+src/rio.c.i	build/Makefile	/^src\/rio.c.i:$/;"	t
+src/rio.c.o	build/Makefile	/^src\/rio.c.o:$/;"	t
+src/rio.c.s	build/Makefile	/^src\/rio.c.s:$/;"	t
+src/rio.i	build/Makefile	/^src\/rio.i: src\/rio.c.i$/;"	t
+src/rio.o	build/Makefile	/^src\/rio.o: src\/rio.c.o$/;"	t
+src/rio.s	build/Makefile	/^src\/rio.s: src\/rio.c.s$/;"	t
+src/threadpool.c.i	build/Makefile	/^src\/threadpool.c.i:$/;"	t
+src/threadpool.c.o	build/Makefile	/^src\/threadpool.c.o:$/;"	t
+src/threadpool.c.s	build/Makefile	/^src\/threadpool.c.s:$/;"	t
+src/threadpool.i	build/Makefile	/^src\/threadpool.i: src\/threadpool.c.i$/;"	t
+src/threadpool.o	build/Makefile	/^src\/threadpool.o: src\/threadpool.c.o$/;"	t
+src/threadpool.s	build/Makefile	/^src\/threadpool.s: src\/threadpool.c.s$/;"	t
+src/timer.c.i	build/Makefile	/^src\/timer.c.i:$/;"	t
+src/timer.c.o	build/Makefile	/^src\/timer.c.o:$/;"	t
+src/timer.c.s	build/Makefile	/^src\/timer.c.s:$/;"	t
+src/timer.i	build/Makefile	/^src\/timer.i: src\/timer.c.i$/;"	t
+src/timer.o	build/Makefile	/^src\/timer.o: src\/timer.c.o$/;"	t
+src/timer.s	build/Makefile	/^src\/timer.s: src\/timer.c.s$/;"	t
+src/util.c.i	build/Makefile	/^src\/util.c.i:$/;"	t
+src/util.c.o	build/Makefile	/^src\/util.c.o:$/;"	t
+src/util.c.s	build/Makefile	/^src\/util.c.s:$/;"	t
+src/util.i	build/Makefile	/^src\/util.i: src\/util.c.i$/;"	t
+src/util.o	build/Makefile	/^src\/util.o: src\/util.c.o$/;"	t
+src/util.s	build/Makefile	/^src\/util.s: src\/util.c.s$/;"	t
+src/zaver.c.i	build/Makefile	/^src\/zaver.c.i:$/;"	t
+src/zaver.c.o	build/Makefile	/^src\/zaver.c.o:$/;"	t
+src/zaver.c.s	build/Makefile	/^src\/zaver.c.s:$/;"	t
+src/zaver.i	build/Makefile	/^src\/zaver.i: src\/zaver.c.i$/;"	t
+src/zaver.o	build/Makefile	/^src\/zaver.o: src\/zaver.c.o$/;"	t
+src/zaver.s	build/Makefile	/^src\/zaver.s: src\/zaver.c.s$/;"	t
+st_header	tests/list_test.c	/^} st_header;$/;"	t	typeref:struct:__anon9d8268730108	file:
+st_struct	tests/list_test.c	/^} st_struct;$/;"	t	typeref:struct:__anon9d8268730208	file:
+started	src/threadpool.h	/^    int started;$/;"	m	struct:__anon2d8b0e440108	typeref:typename:int
+state	src/http_request.h	/^    int state;$/;"	m	struct:zv_http_request_s	typeref:typename:int
+status	src/http_request.h	/^    int status;$/;"	m	struct:__anona25ba9ba0108	typeref:typename:int
+sum	tests/thread_pool_test.c	/^size_t sum = 0;$/;"	v	typeref:typename:size_t
+sum_n	tests/thread_pool_test.c	/^static void sum_n(void *arg) {$/;"	f	typeref:typename:void	file:
+sw_after_slash_in_uri	src/http_parse.c	/^        sw_after_slash_in_uri,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_almost_done	src/http_parse.c	/^        sw_almost_done$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_cr	src/http_parse.c	/^        sw_cr,$/;"	e	enum:zv_http_parse_request_body::__anoncc5b55270203	file:
+sw_crlf	src/http_parse.c	/^        sw_crlf,$/;"	e	enum:zv_http_parse_request_body::__anoncc5b55270203	file:
+sw_crlfcr	src/http_parse.c	/^        sw_crlfcr$/;"	e	enum:zv_http_parse_request_body::__anoncc5b55270203	file:
+sw_first_major_digit	src/http_parse.c	/^        sw_first_major_digit,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_first_minor_digit	src/http_parse.c	/^        sw_first_minor_digit,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_http	src/http_parse.c	/^        sw_http,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_http_H	src/http_parse.c	/^        sw_http_H,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_http_HT	src/http_parse.c	/^        sw_http_HT,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_http_HTT	src/http_parse.c	/^        sw_http_HTT,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_http_HTTP	src/http_parse.c	/^        sw_http_HTTP,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_key	src/http_parse.c	/^        sw_key,$/;"	e	enum:zv_http_parse_request_body::__anoncc5b55270203	file:
+sw_major_digit	src/http_parse.c	/^        sw_major_digit,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_method	src/http_parse.c	/^        sw_method,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_minor_digit	src/http_parse.c	/^        sw_minor_digit,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_spaces_after_colon	src/http_parse.c	/^        sw_spaces_after_colon,$/;"	e	enum:zv_http_parse_request_body::__anoncc5b55270203	file:
+sw_spaces_after_digit	src/http_parse.c	/^        sw_spaces_after_digit,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_spaces_before_colon	src/http_parse.c	/^        sw_spaces_before_colon,$/;"	e	enum:zv_http_parse_request_body::__anoncc5b55270203	file:
+sw_spaces_before_uri	src/http_parse.c	/^        sw_spaces_before_uri,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_start	src/http_parse.c	/^        sw_start = 0,$/;"	e	enum:zv_http_parse_request_body::__anoncc5b55270203	file:
+sw_start	src/http_parse.c	/^        sw_start = 0,$/;"	e	enum:zv_http_parse_request_line::__anoncc5b55270103	file:
+sw_value	src/http_parse.c	/^        sw_value,$/;"	e	enum:zv_http_parse_request_body::__anoncc5b55270203	file:
+swim	src/priority_queue.c	/^static void swim(zv_pq_t *zv_pq, size_t k) {$/;"	f	typeref:typename:void	file:
+testdata	tests/priority_queue_test.c	/^size_t testdata[] = {112, 1634, 2151, 1345, 362, 1557, 1622, 461, 427, 1587, 1836, 2902, 1059, 5/;"	v	typeref:typename:size_t[]
+tests/CMakeFiles/list_test.dir/rule	build/tests/Makefile	/^tests\/CMakeFiles\/list_test.dir\/rule:$/;"	t
+tests/CMakeFiles/priority_queue_test.dir/rule	build/tests/Makefile	/^tests\/CMakeFiles\/priority_queue_test.dir\/rule:$/;"	t
+tests/CMakeFiles/thread_pool_test.dir/rule	build/tests/Makefile	/^tests\/CMakeFiles\/thread_pool_test.dir\/rule:$/;"	t
+thread_count	src/threadpool.h	/^    int thread_count;$/;"	m	struct:__anon2d8b0e440108	typeref:typename:int
+thread_num	src/util.h	/^    int thread_num;$/;"	m	struct:zv_conf_s	typeref:typename:int
+thread_pool_test	build/Makefile	/^thread_pool_test: cmake_check_build_system$/;"	t
+thread_pool_test	build/tests/Makefile	/^thread_pool_test: tests\/CMakeFiles\/thread_pool_test.dir\/rule$/;"	t
+thread_pool_test.c.i	build/tests/Makefile	/^thread_pool_test.c.i:$/;"	t
+thread_pool_test.c.o	build/tests/Makefile	/^thread_pool_test.c.o:$/;"	t
+thread_pool_test.c.s	build/tests/Makefile	/^thread_pool_test.c.s:$/;"	t
+thread_pool_test.i	build/tests/Makefile	/^thread_pool_test.i: thread_pool_test.c.i$/;"	t
+thread_pool_test.o	build/tests/Makefile	/^thread_pool_test.o: thread_pool_test.c.o$/;"	t
+thread_pool_test.s	build/tests/Makefile	/^thread_pool_test.s: thread_pool_test.c.s$/;"	t
+thread_pool_test/fast	build/Makefile	/^thread_pool_test\/fast:$/;"	t
+thread_pool_test/fast	build/tests/Makefile	/^thread_pool_test\/fast:$/;"	t
+threadpool_add	src/threadpool.c	/^int threadpool_add(zv_threadpool_t *pool, void (*func)(void *), void *arg) {$/;"	f	typeref:typename:int
+threadpool_destroy	src/threadpool.c	/^int threadpool_destroy(zv_threadpool_t *pool, int graceful) {$/;"	f	typeref:typename:int
+threadpool_free	src/threadpool.c	/^int threadpool_free(zv_threadpool_t *pool) {$/;"	f	typeref:typename:int
+threadpool_init	src/threadpool.c	/^zv_threadpool_t *threadpool_init(int thread_num) {$/;"	f	typeref:typename:zv_threadpool_t *
+threadpool_worker	src/threadpool.c	/^static void *threadpool_worker(void *arg) {$/;"	f	typeref:typename:void *	file:
+threads	src/threadpool.h	/^    pthread_t *threads;$/;"	m	struct:__anon2d8b0e440108	typeref:typename:pthread_t *
+timer	src/http_request.h	/^    void *timer;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+timer_comp	src/timer.c	/^static int timer_comp(void *ti, void *tj) {$/;"	f	typeref:typename:int	file:
+timer_handler_pt	src/timer.h	/^typedef int (*timer_handler_pt)(zv_http_request_t *rq);$/;"	t	typeref:typename:int (*)(zv_http_request_t * rq)
+type	src/http.h	/^	const char *type;$/;"	m	struct:mime_type_s	typeref:typename:const char *
+uri_end	src/http_request.h	/^    void *uri_end;      \/* not include uri_end*\/ $/;"	m	struct:zv_http_request_s	typeref:typename:void *
+uri_start	src/http_request.h	/^    void *uri_start;$/;"	m	struct:zv_http_request_s	typeref:typename:void *
+usage	src/zaver.c	/^static void usage() {$/;"	f	typeref:typename:void	file:
+value	src/http.h	/^	const char *value;$/;"	m	struct:mime_type_s	typeref:typename:const char *
+value_end	src/http_request.h	/^    void *value_start, *value_end;$/;"	m	struct:zv_http_header_s	typeref:typename:void *
+value_start	src/http_request.h	/^    void *value_start, *value_end;$/;"	m	struct:zv_http_header_s	typeref:typename:void *
+volatile	build/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c	/^# define volatile$/;"	d	file:
+zaver	build/Makefile	/^zaver: cmake_check_build_system$/;"	t
+zaver/fast	build/Makefile	/^zaver\/fast:$/;"	t
+zaver_mime	src/http.c	/^mime_type_t zaver_mime[] = $/;"	v	typeref:typename:mime_type_t[]
+zv_add_timer	src/timer.c	/^void zv_add_timer(zv_http_request_t *rq, size_t timeout, timer_handler_pt handler) {$/;"	f	typeref:typename:void
+zv_conf_s	src/util.h	/^struct zv_conf_s {$/;"	s
+zv_conf_t	src/util.h	/^typedef struct zv_conf_s zv_conf_t;$/;"	t	typeref:struct:zv_conf_s
+zv_current_msec	src/timer.c	/^size_t zv_current_msec;$/;"	v	typeref:typename:size_t
+zv_del_timer	src/timer.c	/^void zv_del_timer(zv_http_request_t *rq) {$/;"	f	typeref:typename:void
+zv_epoll_add	src/epoll.c	/^void zv_epoll_add(int epfd, int fd, struct epoll_event *event) {$/;"	f	typeref:typename:void
+zv_epoll_create	src/epoll.c	/^int zv_epoll_create(int flags) {$/;"	f	typeref:typename:int
+zv_epoll_del	src/epoll.c	/^void zv_epoll_del(int epfd, int fd, struct epoll_event *event) {$/;"	f	typeref:typename:void
+zv_epoll_mod	src/epoll.c	/^void zv_epoll_mod(int epfd, int fd, struct epoll_event *event) {$/;"	f	typeref:typename:void
+zv_epoll_wait	src/epoll.c	/^int zv_epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout) {$/;"	f	typeref:typename:int
+zv_find_timer	src/timer.c	/^int zv_find_timer() {$/;"	f	typeref:typename:int
+zv_free_out_t	src/http_request.c	/^int zv_free_out_t(zv_http_out_t *o) {$/;"	f	typeref:typename:int
+zv_free_request_t	src/http_request.c	/^int zv_free_request_t(zv_http_request_t *r) {$/;"	f	typeref:typename:int
+zv_handle_expire_timers	src/timer.c	/^void zv_handle_expire_timers() {$/;"	f	typeref:typename:void
+zv_http_close_conn	src/http_request.c	/^int zv_http_close_conn(zv_http_request_t *r) {$/;"	f	typeref:typename:int
+zv_http_handle_header	src/http_request.c	/^void zv_http_handle_header(zv_http_request_t *r, zv_http_out_t *o) {$/;"	f	typeref:typename:void
+zv_http_header_handle_t	src/http_request.h	/^} zv_http_header_handle_t;$/;"	t	typeref:struct:__anona25ba9ba0208
+zv_http_header_handler_pt	src/http_request.h	/^typedef int (*zv_http_header_handler_pt)(zv_http_request_t *r, zv_http_out_t *o, char *data, int/;"	t	typeref:typename:int (*)(zv_http_request_t * r,zv_http_out_t * o,char * data,int len)
+zv_http_header_s	src/http_request.h	/^typedef struct zv_http_header_s {$/;"	s
+zv_http_header_t	src/http_request.h	/^} zv_http_header_t;$/;"	t	typeref:struct:zv_http_header_s
+zv_http_headers_in	src/http_request.c	/^zv_http_header_handle_t zv_http_headers_in[] = {$/;"	v	typeref:typename:zv_http_header_handle_t[]
+zv_http_out_t	src/http_request.h	/^} zv_http_out_t;$/;"	t	typeref:struct:__anona25ba9ba0108
+zv_http_parse_request_body	src/http_parse.c	/^int zv_http_parse_request_body(zv_http_request_t *r) {$/;"	f	typeref:typename:int
+zv_http_parse_request_line	src/http_parse.c	/^int zv_http_parse_request_line(zv_http_request_t *r) {$/;"	f	typeref:typename:int
+zv_http_process_connection	src/http_request.c	/^static int zv_http_process_connection(zv_http_request_t *r, zv_http_out_t *out, char *data, int /;"	f	typeref:typename:int	file:
+zv_http_process_if_modified_since	src/http_request.c	/^static int zv_http_process_if_modified_since(zv_http_request_t *r, zv_http_out_t *out, char *dat/;"	f	typeref:typename:int	file:
+zv_http_process_ignore	src/http_request.c	/^static int zv_http_process_ignore(zv_http_request_t *r, zv_http_out_t *out, char *data, int len)/;"	f	typeref:typename:int	file:
+zv_http_request_s	src/http_request.h	/^typedef struct zv_http_request_s {$/;"	s
+zv_http_request_t	src/http_request.h	/^} zv_http_request_t;$/;"	t	typeref:struct:zv_http_request_s
+zv_init_out_t	src/http_request.c	/^int zv_init_out_t(zv_http_out_t *o, int fd) {$/;"	f	typeref:typename:int
+zv_init_request_t	src/http_request.c	/^int zv_init_request_t(zv_http_request_t *r, int fd, int epfd, zv_conf_t *cf) {$/;"	f	typeref:typename:int
+zv_pq_comparator_pt	src/priority_queue.h	/^typedef int (*zv_pq_comparator_pt)(void *pi, void *pj);$/;"	t	typeref:typename:int (*)(void * pi,void * pj)
+zv_pq_delmin	src/priority_queue.c	/^int zv_pq_delmin(zv_pq_t *zv_pq) {$/;"	f	typeref:typename:int
+zv_pq_init	src/priority_queue.c	/^int zv_pq_init(zv_pq_t *zv_pq, zv_pq_comparator_pt comp, size_t size) {$/;"	f	typeref:typename:int
+zv_pq_insert	src/priority_queue.c	/^int zv_pq_insert(zv_pq_t *zv_pq, void *item) {$/;"	f	typeref:typename:int
+zv_pq_is_empty	src/priority_queue.c	/^int zv_pq_is_empty(zv_pq_t *zv_pq) {$/;"	f	typeref:typename:int
+zv_pq_min	src/priority_queue.c	/^void *zv_pq_min(zv_pq_t *zv_pq) {$/;"	f	typeref:typename:void *
+zv_pq_sink	src/priority_queue.c	/^int zv_pq_sink(zv_pq_t *zv_pq, size_t i) {$/;"	f	typeref:typename:int
+zv_pq_size	src/priority_queue.c	/^size_t zv_pq_size(zv_pq_t *zv_pq) {$/;"	f	typeref:typename:size_t
+zv_pq_t	src/priority_queue.h	/^} zv_pq_t;$/;"	t	typeref:struct:__anon0c09c0180108
+zv_str3Ocmp	src/http.h	/^#define zv_str3Ocmp(/;"	d
+zv_str3_cmp	src/http.h	/^#define zv_str3_cmp(/;"	d
+zv_str4cmp	src/http.h	/^#define zv_str4cmp(/;"	d
+zv_task_s	src/threadpool.h	/^typedef struct zv_task_s {$/;"	s
+zv_task_t	src/threadpool.h	/^} zv_task_t;$/;"	t	typeref:struct:zv_task_s
+zv_threadpool_error_t	src/threadpool.h	/^} zv_threadpool_error_t;$/;"	t	typeref:enum:__anon2d8b0e440203
+zv_threadpool_sd_t	src/threadpool.c	/^} zv_threadpool_sd_t;$/;"	t	typeref:enum:__anon2d8b0e3f0103	file:
+zv_threadpool_t	src/threadpool.h	/^} zv_threadpool_t;$/;"	t	typeref:struct:__anon2d8b0e440108
+zv_time_update	src/timer.c	/^static void zv_time_update() {$/;"	f	typeref:typename:void	file:
+zv_timer	src/timer.c	/^zv_pq_t zv_timer;$/;"	v	typeref:typename:zv_pq_t
+zv_timer_init	src/timer.c	/^int zv_timer_init() {$/;"	f	typeref:typename:int
+zv_timer_node	src/timer.h	/^} zv_timer_node;$/;"	t	typeref:struct:zv_timer_node_s
+zv_timer_node_s	src/timer.h	/^typedef struct zv_timer_node_s{$/;"	s
+zv_tp_already_shutdown	src/threadpool.h	/^    zv_tp_already_shutdown  = -3,$/;"	e	enum:__anon2d8b0e440203
+zv_tp_cond_broadcast	src/threadpool.h	/^    zv_tp_cond_broadcast    = -4,$/;"	e	enum:__anon2d8b0e440203
+zv_tp_invalid	src/threadpool.h	/^    zv_tp_invalid   = -1,$/;"	e	enum:__anon2d8b0e440203
+zv_tp_lock_fail	src/threadpool.h	/^    zv_tp_lock_fail = -2,$/;"	e	enum:__anon2d8b0e440203
+zv_tp_thread_fail	src/threadpool.h	/^    zv_tp_thread_fail       = -5,$/;"	e	enum:__anon2d8b0e440203

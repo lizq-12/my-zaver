@@ -1,0 +1,8 @@
+/home/lizq/lizqpi/network_code/zaver/build_nocache/CMakeFiles/zaver.dir
+/home/lizq/lizqpi/network_code/zaver/build_nocache/CMakeFiles/edit_cache.dir
+/home/lizq/lizqpi/network_code/zaver/build_nocache/CMakeFiles/rebuild_cache.dir
+/home/lizq/lizqpi/network_code/zaver/build_nocache/tests/CMakeFiles/list_test.dir
+/home/lizq/lizqpi/network_code/zaver/build_nocache/tests/CMakeFiles/priority_queue_test.dir
+/home/lizq/lizqpi/network_code/zaver/build_nocache/tests/CMakeFiles/thread_pool_test.dir
+/home/lizq/lizqpi/network_code/zaver/build_nocache/tests/CMakeFiles/edit_cache.dir
+/home/lizq/lizqpi/network_code/zaver/build_nocache/tests/CMakeFiles/rebuild_cache.dir

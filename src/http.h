@@ -33,5 +33,6 @@ typedef struct mime_type_s {
 } mime_type_t;
 
 void do_request(void *infd);
+void do_write(void *infd);
 
 #endif

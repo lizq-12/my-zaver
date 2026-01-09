@@ -7,6 +7,8 @@
 #ifndef ZV_LIST_H
 #define ZV_LIST_H
 
+#include <stddef.h>
+
 #ifndef NULL
 #define NULL 0
 #endif
@@ -63,8 +65,6 @@ static inline void list_del(struct list_head *entry) {
 static inline int list_empty(struct list_head *head) {
     return (head->next == head) && (head->prev == head);
 }
-
-#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 
 #define container_of(ptr, type, member) ({                      \
         const typeof( ((type *)0)->member ) *__mptr = (ptr);    \

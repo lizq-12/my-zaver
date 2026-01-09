@@ -11,13 +11,13 @@
 #include "http_request.h"
 
 #define ZV_TIMER_INFINITE -1
-#define TIMEOUT_DEFAULT 500     /* ms */
+#define TIMEOUT_DEFAULT 5000     /* ms */
 
 typedef int (*timer_handler_pt)(zv_http_request_t *rq);
 
 typedef struct zv_timer_node_s{
     size_t key;
-    int deleted;    /* if remote client close the socket first, set deleted to 1 */
+    int deleted;    //标记是否被删除 为1表示被删除
     timer_handler_pt handler;
     zv_http_request_t *rq;
 } zv_timer_node;

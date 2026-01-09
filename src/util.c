@@ -13,46 +13,50 @@
 #include <strings.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <errno.h>
 #include "util.h"
 #include "dbg.h"
 
-int open_listenfd(int port) 
+// 打开一个监听port的套接字，启用SO_REUSEPORT选项（用于多进程工作者）。
+// 注意：SO_REUSEPORT必须在bind()之前设置。
+int open_listenfd_reuseport(int port)
 {
     if (port <= 0) {
         port = 3000;
     }
 
-    int listenfd, optval=1;
+    int listenfd, optval = 1;
     struct sockaddr_in serveraddr;
-  
-    /* Create a socket descriptor */
+
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-	    return -1;
- 
-    /* Eliminates "Address already in use" error from bind. */
-    if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, 
-		   (const void *)&optval , sizeof(int)) < 0)
-	    return -1;
+        return -1;
+// 设置地址复用选项
+    if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR,
+                   (const void *)&optval, sizeof(int)) < 0)
+        return -1;
+// 设置端口复用选项
+#ifdef SO_REUSEPORT
+    if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEPORT,
+                   (const void *)&optval, sizeof(int)) < 0)
+        return -1;
+#else
+    errno = ENOPROTOOPT;
+    return -1;
+#endif
 
-    /* Listenfd will be an endpoint for all requests to port
-       on any IP address for this host */
-    bzero((char *) &serveraddr, sizeof(serveraddr));
-    serveraddr.sin_family = AF_INET; 
-    serveraddr.sin_addr.s_addr = htonl(INADDR_ANY); 
-    serveraddr.sin_port = htons((unsigned short)port); 
+    bzero((char *)&serveraddr, sizeof(serveraddr));
+    serveraddr.sin_family = AF_INET;
+    serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serveraddr.sin_port = htons((unsigned short)port);
     if (bind(listenfd, (struct sockaddr *)&serveraddr, sizeof(serveraddr)) < 0)
-	    return -1;
+        return -1;
 
-    /* Make it a listening socket ready to accept connection requests */
     if (listen(listenfd, LISTENQ) < 0)
-	    return -1;
+        return -1;
 
     return listenfd;
 }
-
-/*
-    make a socket non blocking. If a listen socket is a blocking socket, after it comes out from epoll and accepts the last connection, the next accept will block, which is not what we want
-*/
+// 将套接字设置为非阻塞模式
 int make_socket_non_blocking(int fd) {
     int flags, s;
     flags = fcntl(fd, F_GETFL, 0);
@@ -81,22 +85,25 @@ int read_conf(char *filename, zv_conf_t *cf, char *buf, int len) {
         log_err("cannot open config file: %s", filename);
         return ZV_CONF_ERROR;
     }
+    //默认配置
+    cf->root = NULL;
+    cf->port = 3000;
+    cf->thread_num = 4;
+    cf->workers = 1;
+    cf->cpu_affinity = 0;
 
     int pos = 0;
     char *delim_pos;
     int line_len;
     char *cur_pos = buf+pos;
-
     while (fgets(cur_pos, len-pos, fp)) {
         delim_pos = strstr(cur_pos, DELIM);
         line_len = strlen(cur_pos);
-        
-        /*
-        debug("read one line from conf: %s, len = %d", cur_pos, line_len);
-        */
+
+        //debug("read one line from conf: %s, len = %d", cur_pos, line_len);
         if (!delim_pos)
             return ZV_CONF_ERROR;
-        
+
         if (cur_pos[strlen(cur_pos) - 1] == '\n') {
             cur_pos[strlen(cur_pos) - 1] = '\0';
         }
@@ -113,7 +120,16 @@ int read_conf(char *filename, zv_conf_t *cf, char *buf, int len) {
             cf->thread_num = atoi(delim_pos + 1);
         }
 
+        if (strncmp("workers", cur_pos, 7) == 0) {
+            cf->workers = atoi(delim_pos + 1);
+        }
+
+        if (strncmp("cpu_affinity", cur_pos, 12) == 0) {
+            cf->cpu_affinity = atoi(delim_pos + 1);
+        }
+
         cur_pos += line_len;
+        pos += line_len;
     }
 
     fclose(fp);

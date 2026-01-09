@@ -1,0 +1,1 @@
+/usr/bin/cc -DZV_REQUEST_FREELIST_MAX=0 -g -O2 -Wall -Wextra -pthread -DNDEBUG -rdynamic CMakeFiles/list_test.dir/list_test.c.o -o list_test 

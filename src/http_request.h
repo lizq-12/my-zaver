@@ -7,8 +7,12 @@
 #ifndef HTTP_REQUEST_H
 #define HTTP_REQUEST_H
 
+#include <errno.h>
+#include <stddef.h>
 #include <time.h>
-#include "http.h"
+#include <sys/types.h>
+#include "list.h"
+#include "util.h"
 
 #define ZV_AGAIN    EAGAIN
 
@@ -29,13 +33,23 @@
 
 #define MAX_BUF 8124
 
+/* output buffer sizes (avoid depending on http.h to prevent circular includes) */
+#define ZV_OUT_HEADER_SIZE 8192
+
 typedef struct zv_http_request_s {
     void *root;
     int fd;
     int epfd;
     char buf[MAX_BUF];  /* ring buffer */
-    size_t pos, last;
-    int state;
+    /*
+     * Buffer normalization (sliding window): buf[0..last) is always contiguous.
+     * parse_pos is the parser cursor used for incremental parsing (ZV_AGAIN).
+     */
+    size_t last;
+    size_t parse_pos;
+    int request_line_state;
+    int header_state;
+    int parse_phase; /* 0: request line, 1: headers, 2: ready to handle */
     void *request_start;
     void *method_end;   /* not include method_end*/
     int method;
@@ -56,6 +70,22 @@ typedef struct zv_http_request_s {
     void *cur_header_value_end;
 
     void *timer;
+
+    /* output state for non-blocking write continuation */
+    int keep_alive;                 /* for current response */
+    int writing;                    /* 1 when waiting EPOLLOUT to continue */
+    char out_header[ZV_OUT_HEADER_SIZE];
+    size_t out_header_len;
+    size_t out_header_sent;
+    char *out_body;                 /* optional heap buffer for error page */
+    size_t out_body_len;
+    size_t out_body_sent;
+    int out_file_fd;                /* optional file fd for sendfile */
+    off_t out_file_offset;
+    size_t out_file_size;
+
+    /* freelist link (used only when caching zv_http_request_t) */
+    struct list_head freelist;
 } zv_http_request_t;
 
 typedef struct {
@@ -94,4 +124,4 @@ const char *get_shortmsg_from_status_code(int status_code);
 extern zv_http_header_handle_t     zv_http_headers_in[];
 
 #endif
-
+ 

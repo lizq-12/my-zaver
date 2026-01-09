@@ -1,0 +1,1 @@
+/usr/bin/cc -DZV_REQUEST_FREELIST_MAX=0 -g -O2 -Wall -Wextra -pthread -DNDEBUG -rdynamic CMakeFiles/priority_queue_test.dir/priority_queue_test.c.o CMakeFiles/priority_queue_test.dir/__/src/priority_queue.c.o -o priority_queue_test 

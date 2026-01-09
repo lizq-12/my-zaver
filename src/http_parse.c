@@ -7,7 +7,8 @@
 #include "http.h"
 #include "http_parse.h"
 #include "error.h"
-
+#include "http_header_cache.h"
+// 解析 HTTP 请求行
 int zv_http_parse_request_line(zv_http_request_t *r) {
     u_char ch, *p, *m;
     size_t pi;
@@ -30,10 +31,10 @@ int zv_http_parse_request_line(zv_http_request_t *r) {
         sw_almost_done
     } state;
 
-    state = r->state;
+    state = r->request_line_state;
 
-    // log_info("ready to parese request line, start = %d, last= %d", (int)r->pos, (int)r->last);
-    for (pi = r->pos; pi < r->last; pi++) {
+    // log_info("ready to parese request line, parse_pos = %d, last= %d", (int)r->parse_pos, (int)r->last);
+    for (pi = r->parse_pos; pi < r->last; pi++) {
         p = (u_char *)&r->buf[pi % MAX_BUF];
         ch = *p;
 
@@ -43,7 +44,7 @@ int zv_http_parse_request_line(zv_http_request_t *r) {
         case sw_start:
             r->request_start = p;
 
-            if (ch == CR || ch == LF) {
+            if (ch == CR || ch == LF) {//允许前面有空行
                 break;
             }
 
@@ -260,24 +261,24 @@ int zv_http_parse_request_line(zv_http_request_t *r) {
         }
     }
 
-    r->pos = pi;
-    r->state = state;
+    r->parse_pos = pi;
+    r->request_line_state = state;
 
     return ZV_AGAIN;
 
 done:
 
-    r->pos = pi + 1;
+    r->parse_pos = pi + 1;
 
     if (r->request_end == NULL) {
         r->request_end = p;
     }
 
-    r->state = sw_start;
+    r->request_line_state = sw_start;
 
     return ZV_OK;
 }
-
+// 解析 HTTP 请求头
 int zv_http_parse_request_body(zv_http_request_t *r) {
     u_char ch, *p;
     size_t pi;
@@ -293,20 +294,26 @@ int zv_http_parse_request_body(zv_http_request_t *r) {
         sw_crlfcr
     } state;
 
-    state = r->state;
-    check(state == 0, "state should be 0");
+    state = r->header_state;
 
-    //log_info("ready to parese request body, start = %d, last= %d", r->pos, r->last);
+    //log_info("ready to parese request body, parse_pos = %d, last= %d", (int)r->parse_pos, (int)r->last);
 
     zv_http_header_t *hd; 
-    for (pi = r->pos; pi < r->last; pi++) {
+    for (pi = r->parse_pos; pi < r->last; pi++) {
         p = (u_char *)&r->buf[pi % MAX_BUF];
         ch = *p;
 
         switch (state) {
         case sw_start:
-            if (ch == CR || ch == LF) {
+            if (ch == CR) {
+                // end of headers: CRLF (no header lines)
+                state = sw_crlfcr;
                 break;
+            }
+
+            if (ch == LF) {
+                // strict: header lines must end with CRLF
+                return ZV_HTTP_PARSE_INVALID_HEADER;
             }
 
             r->cur_header_key_start = p;
@@ -347,11 +354,12 @@ int zv_http_parse_request_body(zv_http_request_t *r) {
             if (ch == CR) {
                 r->cur_header_value_end = p;
                 state = sw_cr;
+                break;
             }
 
             if (ch == LF) {
-                r->cur_header_value_end = p;
-                state = sw_crlf;
+                // strict: header lines must end with CRLF
+                return ZV_HTTP_PARSE_INVALID_HEADER;
             }
             
             break;
@@ -359,14 +367,15 @@ int zv_http_parse_request_body(zv_http_request_t *r) {
             if (ch == LF) {
                 state = sw_crlf;
                 // save the current http header
-                hd = (zv_http_header_t *)malloc(sizeof(zv_http_header_t));
+                hd = zv_http_header_alloc();//从缓存链表或堆上分配一个新的 header 结构体
+                if (hd == NULL) {
+                    return ZV_ERROR;
+                }
                 hd->key_start   = r->cur_header_key_start;
                 hd->key_end     = r->cur_header_key_end;
                 hd->value_start = r->cur_header_value_start;
                 hd->value_end   = r->cur_header_value_end;
-
                 list_add(&(hd->list), &(r->list));
-
                 break;
             } else {
                 return ZV_HTTP_PARSE_INVALID_HEADER;
@@ -392,15 +401,15 @@ int zv_http_parse_request_body(zv_http_request_t *r) {
         }   
     }
 
-    r->pos = pi;
-    r->state = state;
+    r->parse_pos = pi;
+    r->header_state = state;
 
     return ZV_AGAIN;
 
 done:
-    r->pos = pi + 1;
+    r->parse_pos = pi + 1;
 
-    r->state = sw_start;
+    r->header_state = sw_start;
 
     return ZV_OK;
 }

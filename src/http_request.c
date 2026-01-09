@@ -13,6 +13,8 @@
 #include <time.h>
 #include <unistd.h>
 #include "http.h"
+#include "http_header_cache.h"
+#include "http_request_cache.h"
 #include "http_request.h"
 #include "error.h"
 
@@ -26,21 +28,78 @@ zv_http_header_handle_t zv_http_headers_in[] = {
     {"If-Modified-Since", zv_http_process_if_modified_since},
     {"", zv_http_process_ignore}
 };
-
+// 初始化 HTTP 请求结构体
 int zv_init_request_t(zv_http_request_t *r, int fd, int epfd, zv_conf_t *cf) {
     r->fd = fd;
     r->epfd = epfd;
-    r->pos = r->last = 0;
-    r->state = 0;
+    r->last = 0;
+    r->parse_pos = 0;
+    r->request_line_state = 0;
+    r->header_state = 0;
+    r->parse_phase = 0;
     r->root = cf->root;
     INIT_LIST_HEAD(&(r->list));
 
+    /* reset request-line parsing fields to avoid stale pointers on reuse */
+    r->request_start = NULL;
+    r->method_end = NULL;
+    r->method = ZV_HTTP_UNKNOWN;
+    r->uri_start = NULL;
+    r->uri_end = NULL;
+    r->path_start = NULL;
+    r->path_end = NULL;
+    r->query_start = NULL;
+    r->query_end = NULL;
+    r->http_major = 0;
+    r->http_minor = 0;
+    r->request_end = NULL;
+
+    r->cur_header_key_start = NULL;
+    r->cur_header_key_end = NULL;
+    r->cur_header_value_start = NULL;
+    r->cur_header_value_end = NULL;
+
+    r->timer = NULL;//初始化 timer 为 NULL
+    INIT_LIST_HEAD(&(r->freelist));//初始化 freelist 链表头
+
+    r->keep_alive = 0;
+    r->writing = 0;
+    r->out_header_len = 0;
+    r->out_header_sent = 0;
+    r->out_body = NULL;
+    r->out_body_len = 0;
+    r->out_body_sent = 0;
+    r->out_file_fd = -1;
+    r->out_file_offset = 0;
+    r->out_file_size = 0;
+    r->out_header[0] = '\0';
+
     return ZV_OK;
 }
-
+// 释放 HTTP 请求结构体相关资源
 int zv_free_request_t(zv_http_request_t *r) {
-    // TODO
-    (void) r;
+    list_head *pos, *next;
+    zv_http_header_t *hd;
+    
+    for (pos = r->list.next; pos != &(r->list); pos = next) {
+        next = pos->next;
+        hd = list_entry(pos, zv_http_header_t, list);
+        list_del(pos);
+        zv_http_header_free(hd);
+    }
+    INIT_LIST_HEAD(&(r->list));
+    
+    if (r->out_body) {
+        free(r->out_body);
+        r->out_body = NULL;
+    }
+    if (r->out_file_fd >= 0) {
+        close(r->out_file_fd);
+        r->out_file_fd = -1;
+    }
+
+    r->timer = NULL;
+
     return ZV_OK;
 }
 
@@ -60,38 +119,51 @@ int zv_free_out_t(zv_http_out_t *o) {
 }
 
 void zv_http_handle_header(zv_http_request_t *r, zv_http_out_t *o) {
-    list_head *pos;
+    list_head *pos, *next;
     zv_http_header_t *hd;
     zv_http_header_handle_t *header_in;
     int len;
 
-    list_for_each(pos, &(r->list)) {
+    /*
+     * HTTP keep-alive default behavior:
+     * - HTTP/1.1: keep-alive by default unless "Connection: close"
+     * - HTTP/1.0: close by default unless "Connection: keep-alive"
+     */
+    if (r->http_major > 1 || (r->http_major == 1 && r->http_minor >= 1)) {
+        o->keep_alive = 1;
+    } else {
+        o->keep_alive = 0;
+    }
+
+    for (pos = r->list.next; pos != &(r->list); pos = next) {
+        next = pos->next;
         hd = list_entry(pos, zv_http_header_t, list);
         /* handle */
 
-        for (header_in = zv_http_headers_in; 
-            strlen(header_in->name) > 0;
-            header_in++) {
-            if (strncmp(hd->key_start, header_in->name, hd->key_end - hd->key_start) == 0) {
-            
+        for (header_in = zv_http_headers_in; strlen(header_in->name) > 0;header_in++) 
+        {
+            //
+            if (strncmp(hd->key_start, header_in->name, hd->key_end - hd->key_start) == 0) 
+            {
                 //debug("key = %.*s, value = %.*s", hd->key_end-hd->key_start, hd->key_start, hd->value_end-hd->value_start, hd->value_start);
                 len = hd->value_end - hd->value_start;
                 (*(header_in->handler))(r, o, hd->value_start, len);
                 break;
             }    
         }
-
         /* delete it from the original list */
         list_del(pos);
-        free(hd);
+        zv_http_header_free(hd);
     }
 }
-
+// 关闭 HTTP 连接
 int zv_http_close_conn(zv_http_request_t *r) {
     // NOTICE: closing a file descriptor will cause it to be removed from all epoll sets automatically
     // http://stackoverflow.com/questions/8707601/is-it-necessary-to-deregister-a-socket-from-epoll-before-closing-it
+    zv_free_request_t(r);
     close(r->fd);
-    free(r);
+    r->fd = -1;
+    zv_http_request_put(r);
 
     return ZV_OK;
 }
@@ -109,6 +181,8 @@ static int zv_http_process_connection(zv_http_request_t *r, zv_http_out_t *out, 
     (void) r;
     if (strncasecmp("keep-alive", data, len) == 0) {
         out->keep_alive = 1;
+    } else if (strncasecmp("close", data, len) == 0) {
+        out->keep_alive = 0;
     }
 
     return ZV_OK;
