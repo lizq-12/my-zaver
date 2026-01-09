@@ -7,28 +7,47 @@ on:
     branches: [ "master", "main" ]
 
 jobs:
-  build-and-test:
+  release:
     runs-on: ubuntu-latest
-
     steps:
-    # 1. 拉取代码
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake curl
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake curl
 
-    # 3. 配置 CMake
-    - name: Configure CMake
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Configure (Release + -Werror)
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DZV_ENABLE_WERROR=ON
 
-    # 4. 编译项目
-    - name: Build
-      run: cmake --build build --parallel
+      - name: Build
+        run: cmake --build build --parallel
 
-    # 5. 运行功能测试
-    - name: Run Functional Test
-      run: |
-        chmod +x tests/functional_test.sh
-        ./tests/functional_test.sh
+      - name: Functional Test
+        run: |
+          chmod +x tests/functional_test.sh
+          ./tests/functional_test.sh
+
+  sanitize:
+    runs-on: ubuntu-latest
+    env:
+      ASAN_OPTIONS: detect_leaks=1:abort_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake curl
+
+      - name: Configure (Debug + ASan/UBSan)
+        run: cmake -S . -B build-asan -DCMAKE_BUILD_TYPE=Debug -DZV_ENABLE_WERROR=ON -DZV_ENABLE_SANITIZERS=ON
+
+      - name: Build
+        run: cmake --build build-asan --parallel
+
+      - name: Functional Test (ASan)
+        run: |
+          chmod +x tests/functional_test.sh
+          ./tests/functional_test.sh
