@@ -13,7 +13,7 @@ The purpose of Zaver is to help developers understand how to write a high perfor
 * non-blocking I/O
 * thread-pool
 
-## compile and run (for now only support Linux2.6+)
+## compile and run
 
 please make sure you have [cmake](https://cmake.org/) installed.
 ```
@@ -29,17 +29,10 @@ cd .. && ./build/zaver -c zaver.conf
 * timer(use binary heap instead of rbtree used in Nginx)
 
 ## todo
-
-* sendfile (done)
 * proxy
 * FastCGI
 * other HTTP/1.1 features
-* memory pool
-* WebDAV?
-
-## more details
-
-https://zyearn.github.io/blog/2015/05/16/how-to-write-a-server/
+* WebDAV
 
 ## Config
 
@@ -49,14 +42,8 @@ port=3000
 threadnum=4
 workers=0
 cpu_affinity=0
+keep_alive_timeout_ms=5000
+request_timeout_ms=5000
 ```
 
-- `workers`: worker 进程数。
-	- `0` 或负数：自动按 CPU 核数启动（每核一个 worker）
-	- `1`：单进程
-	- `>1`：多进程（使用 `SO_REUSEPORT`，每个 worker 各自 epoll loop）
-
-- `cpu_affinity`: 是否为 worker 绑定 CPU 亲和性。
-	- `0`：关闭
-	- `1`：开启（worker 按 `worker_id` 轮转绑定到可用 CPU；master 不绑定，因为几乎只负责 wait 回收，CPU 占用很低）
 
