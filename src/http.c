@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) Zhu Jiashun
  * Copyright (C) Zaver
@@ -16,12 +15,15 @@
 #include <errno.h>
 #include <sys/uio.h>
 #include <sys/sendfile.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "http.h"
 #include "http_parse.h"
 #include "http_request.h"
 #include "epoll.h"
 #include "error.h"
 #include "timer.h"
+#include "cgi.h"
 /**
  * buf: 目标缓冲区（例如 header 或 body）
  * cap: 缓冲区总容量（通常是 sizeof(header)）
@@ -56,7 +58,7 @@ static int appendf(char *buf, size_t cap, size_t *len, const char *fmt, ...) {
 static int is_expected_disconnect_errno(int e) {
     return (e == EPIPE || e == ECONNRESET);
 }
-
+// 记录发送失败的日志
 static void log_send_failed(const char *where, int fd) {
     if (is_expected_disconnect_errno(errno)) {
         log_warn("%s: client closed, fd=%d, errno=%d", where, fd, errno);
@@ -173,7 +175,7 @@ static int try_send(zv_http_request_t *r) {
 // 修改为输入事件或者输出事件events只能二选一
 static void rearm_event(zv_http_request_t *r, uint32_t events) {
     struct epoll_event event;
-    event.data.ptr = (void *)r;
+    event.data.ptr = (void *)r->conn_item;
     event.events = events | EPOLLET | EPOLLONESHOT;
     zv_epoll_mod(r->epfd, r->fd, &event);
 }
@@ -192,7 +194,17 @@ static const char* get_file_type(const char *type);
 static int parse_uri(const char *uri, int length, char *filename, size_t filename_cap, char *querystring);
 static int prepare_error(zv_http_request_t *r, char *cause, char *errnum, char *shortmsg, char *longmsg, int keep_alive);
 static int prepare_static(zv_http_request_t *r, char *filename, size_t filesize, zv_http_out_t *out);
+static int percent_decode(const char *in, size_t in_len, char *out, size_t out_cap, size_t *out_len);
+static int normalize_abs_path(const char *path, size_t path_len, char *out, size_t out_cap, int *ends_with_slash);
+static int is_path_under_root_real(const char *root, const char *path);
+static int handle_cgi_mvp(zv_http_request_t *r, int fd, char *filename, size_t filename_cap);
+/* handle_cgi_mvp return codes */
+#define ZV_CGI_NOT    0// 不是 CGI，请 do_request 继续走静态文件流程
+#define ZV_CGI_RETURN 1// 这个请求已经被 CGI 分支“接管”，do_request 应该直接 return
+#define ZV_CGI_CLOSE  2// 已经回了错误页且发送完成，do_request 应该 goto close 关连接
+
 static char *ROOT = NULL;
+
 // 将十六进制字符转换为对应的整数值
 static int hex_val(char c) {
     if (c >= '0' && c <= '9') return c - '0';
@@ -403,6 +415,18 @@ void do_request(void *ptr) {
             r->parse_phase = 2;
         }
         //至此已经完整解析了一个 HTTP 请求
+        // 处理 CGI 请求
+        rc = handle_cgi_mvp(r, fd, filename, sizeof(filename));
+        if (rc < 0) {
+            goto err;
+        }
+        if (rc == ZV_CGI_RETURN) {
+            return;
+        }
+        if (rc == ZV_CGI_CLOSE) {
+            goto close;
+        }
+
         //读取 URI 并转换成文件路径
         if (parse_uri(r->uri_start, (int)(r->uri_end - r->uri_start), filename, sizeof(filename), NULL) < 0) {
             rc = prepare_error(r, "invalid uri", "400", "Bad Request", "invalid uri", 0);
@@ -576,12 +600,259 @@ close:
     rc = zv_http_close_conn(r);
     check(rc == 0, "do_request: zv_http_close_conn");
 }
+// 处理最简版 CGI 请求
+//-1 表示出错 错误页
+//ZV_CGI_NOT 不是 CGI，请 do_request 继续走静态文件流程
+//ZV_CGI_RETURN 这个请求已经被 CGI 分支“接管”，do_request 应该直接 return
+//ZV_CGI_CLOSE 已经回了错误页且发送完成，do_request 应该 goto close 关连接
+static int handle_cgi_mvp(zv_http_request_t *r, int fd, char *filename, size_t filename_cap) {
+    if (!r || !r->uri_start || !r->uri_end || !filename || filename_cap == 0) {
+        return ZV_CGI_NOT;//这里返回 ZV_CGI_NOT 而不是报错，是为了不改变主流程的容错：主流程后面会对 URI 做自己的检查并回 400。
+    }
+
+    int rc;
+    int uri_len = (int)(r->uri_end - r->uri_start);
+    int path_len = uri_len;
+    for (int i = 0; i < uri_len; i++) {
+        if (((char *)r->uri_start)[i] == '?') {
+            path_len = i;
+            break;
+        }
+    }
+    // 检查 URI 是否以 /cgi-bin/ 开头
+    if (path_len < 9 || strncmp((const char *)r->uri_start, "/cgi-bin/", 9) != 0) {
+        return ZV_CGI_NOT;
+    }
+    // 仅支持 GET 方法 如果 CGI 不支持的 method，就当普通错误响应处理。
+    if (r->method != ZV_HTTP_GET) {
+        rc = prepare_error(r, "cgi", "405", "Method Not Allowed", "cgi GET only", 0);
+        if (rc < 0) {
+            return -1;
+        }
+        rc = try_send(r);
+        if (rc < 0) {
+            log_send_failed("try_send 405", fd);
+            return -1;
+        }
+        if (rc == 1) {
+            r->writing = 1;
+            rearm_event(r, EPOLLOUT);
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return ZV_CGI_RETURN;
+        }
+        return ZV_CGI_CLOSE;
+    }
+    // 消费并清空 header list（这里不使用但是需要消费掉清空）
+    /* Parse request headers (keep-alive etc). CGI MVP will force close anyway. */
+    zv_http_out_t tmp_out;
+    (void)zv_init_out_t(&tmp_out, fd);
+    zv_http_handle_header(r, &tmp_out);
+    check(list_empty(&(r->list)) == 1, "header list should be empty");
+
+    /* Build SCRIPT_NAME and QUERY_STRING */
+    char script_name[SHORTLINE];
+    // 检查脚本名长度是否超过缓冲区容量 出错处理
+    if (path_len >= (int)sizeof(script_name)) {
+        rc = prepare_error(r, "cgi uri too long", "400", "Bad Request", "cgi uri too long", 0);
+        if (rc < 0) {
+            return -1;
+        }
+        rc = try_send(r);
+        if (rc < 0) {
+            log_send_failed("try_send 400(cgi)", fd);
+            return -1;
+        }
+        if (rc == 1) {
+            r->writing = 1;
+            rearm_event(r, EPOLLOUT);
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return ZV_CGI_RETURN;
+        }
+        return ZV_CGI_CLOSE;
+    }
+    // 复制脚本名
+    memcpy(script_name, r->uri_start, (size_t)path_len);
+    script_name[path_len] = '\0';
+    // qs 是 ? 后面的原始 query（不做 decode），同样交给 CGI env。
+    char query_string[SHORTLINE];
+    const char *qs = NULL;
+    if (path_len < uri_len) {
+        int qlen = uri_len - path_len - 1;
+        if (qlen > 0) {
+            if (qlen >= (int)sizeof(query_string)) {
+                qlen = (int)sizeof(query_string) - 1;
+            }
+            memcpy(query_string, (char *)r->uri_start + path_len + 1, (size_t)qlen);
+            query_string[qlen] = '\0';
+            qs = query_string;
+        }
+    }
+
+    /* Map URI path to filesystem under docroot, without index.html heuristic. */
+    char decoded[SHORTLINE];
+    size_t decoded_len = 0;
+    if (percent_decode((const char *)r->uri_start, (size_t)path_len, decoded, sizeof(decoded), &decoded_len) < 0) {
+        rc = prepare_error(r, "invalid cgi uri", "400", "Bad Request", "invalid cgi uri", 0);
+        if (rc < 0) {
+            return -1;
+        }
+        rc = try_send(r);
+        if (rc < 0) {
+            log_send_failed("try_send 400(cgi uri)", fd);
+            return -1;
+        }
+        if (rc == 1) {
+            r->writing = 1;
+            rearm_event(r, EPOLLOUT);
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return ZV_CGI_RETURN;
+        }
+        return ZV_CGI_CLOSE;
+    }
+
+    char norm[SHORTLINE];
+    if (normalize_abs_path(decoded, decoded_len, norm, sizeof(norm), NULL) < 0) {
+        rc = prepare_error(r, "invalid cgi uri", "400", "Bad Request", "invalid cgi uri", 0);
+        if (rc < 0) {
+            return -1;
+        }
+        rc = try_send(r);
+        if (rc < 0) {
+            log_send_failed("try_send 400(cgi norm)", fd);
+            return -1;
+        }
+        if (rc == 1) {
+            r->writing = 1;
+            rearm_event(r, EPOLLOUT);
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return ZV_CGI_RETURN;
+        }
+        return ZV_CGI_CLOSE;
+    }
+    // 确保规范化后仍在 /cgi-bin/ 下（防止编码绕过）
+    if (strncmp(norm, "/cgi-bin/", 9) != 0) {
+        rc = prepare_error(r, "invalid cgi uri", "403", "Forbidden", "invalid cgi uri", 0);
+        if (rc < 0) {
+            return -1;
+        }
+        rc = try_send(r);
+        if (rc < 0) {
+            log_send_failed("try_send 403(cgi)", fd);
+            return -1;
+        }
+        if (rc == 1) {
+            r->writing = 1;
+            rearm_event(r, EPOLLOUT);
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return ZV_CGI_RETURN;
+        }
+        return ZV_CGI_CLOSE;
+    }
+    // 拼成磁盘路径 ？？？？？？？？？？？？？？？？？？？？？？？？？
+    int nfmt = snprintf(filename, filename_cap, "%s%s", ROOT, norm);
+    if (nfmt < 0 || (size_t)nfmt >= filename_cap) {
+        rc = prepare_error(r, "cgi path too long", "400", "Bad Request", "cgi path too long", 0);
+        if (rc < 0) {
+            return -1;
+        }
+        rc = try_send(r);
+        if (rc < 0) {
+            log_send_failed("try_send 400(cgi path)", fd);
+            return -1;
+        }
+        if (rc == 1) {
+            r->writing = 1;
+            rearm_event(r, EPOLLOUT);
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return ZV_CGI_RETURN;
+        }
+        return ZV_CGI_CLOSE;
+    }
+    //必须是普通文件且可执行
+    struct stat cgi_sb;
+    if (stat(filename, &cgi_sb) < 0 || !S_ISREG(cgi_sb.st_mode) || !(cgi_sb.st_mode & S_IXUSR)) {
+        rc = prepare_error(r, filename, "404", "Not Found", "cgi not found", 0);
+        if (rc < 0) {
+            return -1;
+        }
+        rc = try_send(r);
+        if (rc < 0) {
+            log_send_failed("try_send 404(cgi)", fd);
+            return -1;
+        }
+        if (rc == 1) {
+            r->writing = 1;
+            rearm_event(r, EPOLLOUT);
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return ZV_CGI_RETURN;
+        }
+        return ZV_CGI_CLOSE;
+    }
+    // realpath 约束，防止软链接逃逸到 docroot 外
+    if (!is_path_under_root_real(ROOT, filename)) {
+        rc = prepare_error(r, filename, "403", "Forbidden", "cgi path is outside docroot", 0);
+        if (rc < 0) {
+            return -1;
+        }
+        rc = try_send(r);
+        if (rc < 0) {
+            log_send_failed("try_send 403(cgi root)", fd);
+            return -1;
+        }
+        if (rc == 1) {
+            r->writing = 1;
+            rearm_event(r, EPOLLOUT);
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return ZV_CGI_RETURN;
+        }
+        return ZV_CGI_CLOSE;
+    }
+    // 启动 CGI 进程
+    if (zv_cgi_start(r, filename, script_name, qs) != 0) {
+        rc = prepare_error(r, "cgi", "500", "Internal Server Error", "cgi start failed", 0);
+        if (rc < 0) {
+            return -1;
+        }
+        rc = try_send(r);
+        if (rc < 0) {
+            log_send_failed("try_send 500(cgi)", fd);
+            return -1;
+        }
+        if (rc == 1) {
+            r->writing = 1;
+            rearm_event(r, EPOLLOUT);
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return ZV_CGI_RETURN;
+        }
+        return ZV_CGI_CLOSE;
+    }
+
+    return ZV_CGI_RETURN;
+}
 
 void do_write(void *ptr) {
     zv_http_request_t *r = (zv_http_request_t *)ptr;
     int rc;
 
     zv_del_timer(r);
+    // 如果是 CGI 响应 则调用 CGI 写处理函数
+    if (r->cgi_active) {
+        int c = zv_cgi_on_client_writable(r);
+        if (c == 1) {
+            /* EAGAIN */
+            rearm_event(r, EPOLLOUT);
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return;
+        }
+        if (c == 2) {
+            /* waiting for more CGI output */
+            zv_add_timer(r, r->request_timeout_ms, zv_http_close_conn);
+            return;
+        }
+        /* done or error */
+        zv_http_close_conn(r);
+        return;
+    }
     rc = try_send(r);
 
     if (rc == 1) {
@@ -623,11 +894,9 @@ static int parse_uri(const char *uri, int uri_length, char *filename, size_t fil
     if (!uri || !filename || filename_cap == 0 || !ROOT) {
         return -1;
     }
-
     if (uri_length <= 0) {
         return -1;
     }
-
     if ((size_t)uri_length > (SHORTLINE >> 1)) {
         log_err("uri too long");
         return -1;

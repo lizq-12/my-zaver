@@ -90,6 +90,32 @@ typedef struct zv_http_request_s {
 
     /* freelist link (used only when caching zv_http_request_t) */
     struct list_head freelist;
+
+    /* epoll items for watched fds (connection + optional CGI pipes) */
+    struct zv_ep_item_s *conn_item;
+    struct zv_ep_item_s *cgi_out_item;
+    struct zv_ep_item_s *cgi_in_item;
+
+    /* CGI state (minimal MVP: GET only, connection is closed after response) */
+    int cgi_active; //让 do_write() 知道“这是 CGI 响应”，走 zv_cgi_on_client_writable() 而不是静态 try_send()
+    pid_t cgi_pid; //用于超时/关闭连接时 kill + waitpid 回收。
+    int cgi_in_fd;     //父进程写 CGI 输入的 fd（GET MVP 不用，设为 -1）。
+    int cgi_out_fd;   //父进程读 CGI 输出的 fd。
+    int cgi_eof;    
+    size_t cgi_out_total;
+    size_t cgi_out_limit;
+
+    int cgi_headers_done; //用于把 CGI 输出的头（比如 Content-Type:）解析出来，再生成真正的 HTTP 响应头给 client。
+    char cgi_hdr_buf[4096];
+    size_t cgi_hdr_len;
+
+    char cgi_http_header[4096];
+    size_t cgi_http_header_len;
+    size_t cgi_http_header_sent;
+
+    char cgi_body_buf[8192];
+    size_t cgi_body_len;
+    size_t cgi_body_sent;
 } zv_http_request_t;
 
 typedef struct {

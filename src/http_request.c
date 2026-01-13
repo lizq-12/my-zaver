@@ -12,11 +12,14 @@
 #include <math.h>
 #include <time.h>
 #include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
 #include "http.h"
 #include "http_header_cache.h"
 #include "http_request_cache.h"
 #include "http_request.h"
 #include "error.h"
+#include "ep_item.h"
 
 static int zv_http_process_ignore(zv_http_request_t *r, zv_http_out_t *out, char *data, int len);
 static int zv_http_process_connection(zv_http_request_t *r, zv_http_out_t *out, char *data, int len);
@@ -70,6 +73,31 @@ int zv_init_request_t(zv_http_request_t *r, int fd, int epfd, zv_conf_t *cf) {
 
     r->timer = NULL;//初始化 timer 为 NULL
     INIT_LIST_HEAD(&(r->freelist));//初始化 freelist 链表头
+    // 如果 conn_item 为空 则分配内存
+    /* epoll items (allocated once per request block and reused across connections) */
+    if (r->conn_item == NULL) {
+        r->conn_item = (struct zv_ep_item_s *)malloc(sizeof(struct zv_ep_item_s));
+    }
+    //默认初始化为连接类型
+    if (r->conn_item) {
+        zv_ep_item_t *it = (zv_ep_item_t *)r->conn_item;
+        it->kind = ZV_EP_KIND_CONN; 
+        it->fd = fd;
+        it->r = r;
+    }
+    /* CGI items are allocated on demand; if they already exist, reset them */
+    if (r->cgi_out_item) {
+        zv_ep_item_t *it = (zv_ep_item_t *)r->cgi_out_item;
+        it->kind = ZV_EP_KIND_CGI_OUT;
+        it->fd = -1;
+        it->r = r;
+    }
+    if (r->cgi_in_item) {
+        zv_ep_item_t *it = (zv_ep_item_t *)r->cgi_in_item;
+        it->kind = ZV_EP_KIND_CGI_IN;
+        it->fd = -1;
+        it->r = r;
+    }
 
     r->keep_alive = 0;
     r->writing = 0;
@@ -82,6 +110,21 @@ int zv_init_request_t(zv_http_request_t *r, int fd, int epfd, zv_conf_t *cf) {
     r->out_file_offset = 0;
     r->out_file_size = 0;
     r->out_header[0] = '\0';
+
+    /* CGI state */
+    r->cgi_active = 0;
+    r->cgi_pid = -1;
+    r->cgi_in_fd = -1;
+    r->cgi_out_fd = -1;
+    r->cgi_eof = 0;
+    r->cgi_out_total = 0;
+    r->cgi_out_limit = 1024 * 1024; /* 1 MiB default */
+    r->cgi_headers_done = 0;
+    r->cgi_hdr_len = 0;
+    r->cgi_http_header_len = 0;
+    r->cgi_http_header_sent = 0;
+    r->cgi_body_len = 0;
+    r->cgi_body_sent = 0;
 
     return ZV_OK;
 }
@@ -105,6 +148,31 @@ int zv_free_request_t(zv_http_request_t *r) {
     if (r->out_file_fd >= 0) {
         close(r->out_file_fd);
         r->out_file_fd = -1;
+    }
+
+    /* CGI cleanup (best-effort) */
+    if (r->cgi_active) {
+        if (r->cgi_pid > 0) {
+            kill(r->cgi_pid, SIGKILL);
+            (void)waitpid(r->cgi_pid, NULL, WNOHANG);
+        }
+        if (r->cgi_in_fd >= 0) {
+            close(r->cgi_in_fd);
+            r->cgi_in_fd = -1;
+        }
+        if (r->cgi_out_fd >= 0) {
+            close(r->cgi_out_fd);
+            r->cgi_out_fd = -1;
+        }
+        r->cgi_active = 0;
+        r->cgi_pid = -1;
+    }
+
+    if (r->cgi_out_item) {
+        ((zv_ep_item_t *)r->cgi_out_item)->fd = -1;
+    }
+    if (r->cgi_in_item) {
+        ((zv_ep_item_t *)r->cgi_in_item)->fd = -1;
     }
 
     r->timer = NULL;
@@ -172,7 +240,7 @@ int zv_http_close_conn(zv_http_request_t *r) {
     zv_free_request_t(r);
     close(r->fd);
     r->fd = -1;
-    zv_http_request_put(r);
+    zv_http_request_put_deferred(r);
 
     return ZV_OK;
 }

@@ -10,6 +10,9 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONF_FILE="${CONF_FILE:-${ROOT_DIR}/zaver.conf}"
 BUILD_DIR="${BUILD_DIR:-${ROOT_DIR}/build}"
 
+# Ensure the server's CWD matches zaver.conf relative paths (e.g. root=./html)
+cd "${ROOT_DIR}"
+
 PORT="${PORT:-}"
 DOCROOT="${DOCROOT:-}"
 
@@ -54,9 +57,21 @@ for i in {1..50}; do
 done
 
 echo "GET / (should be 200)"
+CODE="$(curl -s -o /dev/null -w "%{http_code}" "${URL_BASE}/")"
+if [[ "${CODE}" != "200" ]]; then
+  echo "GET / expected 200 but got ${CODE}. stderr:" >&2
+  tail -n 50 /tmp/zaver_stderr.log >&2 || true
+  exit 1
+fi
 curl -v "${URL_BASE}/" -o /dev/null
 
 echo "GET /not-exist (should be 404)"
+CODE="$(curl -s -o /dev/null -w "%{http_code}" "${URL_BASE}/not-exist")"
+if [[ "${CODE}" != "404" ]]; then
+  echo "GET /not-exist expected 404 but got ${CODE}. stderr:" >&2
+  tail -n 50 /tmp/zaver_stderr.log >&2 || true
+  exit 1
+fi
 curl -v "${URL_BASE}/not-exist" -o /dev/null || true
 
 echo "Keep-alive: two requests in one curl invocation"

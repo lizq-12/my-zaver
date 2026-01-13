@@ -21,8 +21,6 @@ struct zv_conf_s {
     int thread_num;
     int workers;
     int cpu_affinity;
-
-    /* timeouts (ms) */
     int keep_alive_timeout_ms; /* idle connection timeout */
     int request_timeout_ms;    /* in-flight request/response timeout */
 };

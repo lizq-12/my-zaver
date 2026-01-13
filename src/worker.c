@@ -21,8 +21,10 @@
 #include "dbg.h"
 #include "epoll.h"
 #include "http.h"
+#include "cgi.h"
 #include "http_request_cache.h"
 #include "timer.h"
+#include "ep_item.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include "zv_signal.h"
@@ -137,7 +139,11 @@ int zv_worker_run(zv_conf_t *cf, int worker_id) {
     zv_http_request_t *request = zv_http_request_get(listenfd, epfd, cf);
     check(request != NULL, "zv_http_request_get(listenfd)");
     // 将监听套接字添加到epoll实例中
-    event.data.ptr = (void *)request;
+    check(request->conn_item != NULL, "listen conn_item alloc failed");
+    ((zv_ep_item_t *)request->conn_item)->kind = ZV_EP_KIND_LISTEN; // 事件类型为监听事件
+    ((zv_ep_item_t *)request->conn_item)->fd = listenfd;
+    ((zv_ep_item_t *)request->conn_item)->r = request;
+    event.data.ptr = (void *)request->conn_item;
     event.events = EPOLLIN | EPOLLET;
     zv_epoll_add(epfd, listenfd, &event);
 
@@ -160,11 +166,13 @@ int zv_worker_run(zv_conf_t *cf, int worker_id) {
         // 处理就绪事件
         for (i = 0; i < n; i++) 
         {
-            zv_http_request_t *r = (zv_http_request_t *)events[i].data.ptr;
-            fd = r->fd;
-            // 如果是监听套接字有新连接到来
-            if (listenfd == fd) 
-            {
+            zv_ep_item_t *it = (zv_ep_item_t *)events[i].data.ptr;
+            if (!it) continue;
+
+            zv_http_request_t *r = it->r;
+            fd = it->fd;
+
+            if (it->kind == ZV_EP_KIND_LISTEN) {
                 int infd;
                 while (1) {//循环接受所有到来的连接
                     infd = accept(listenfd, (struct sockaddr *)&clientaddr, &inlen);
@@ -193,15 +201,28 @@ int zv_worker_run(zv_conf_t *cf, int worker_id) {
                         close(infd);
                         break;
                     }
+                    if (!req->conn_item) {
+                        log_err("conn_item alloc failed");
+                        close(infd);
+                        zv_http_request_put_deferred(req);
+                        break;
+                    }
                     // 将新连接套接字添加到epoll实例中，监听读事件
                     // EPOLLONESHOT表示事件触发后需要重新注册才能继续监听该事件
-                    event.data.ptr = (void *)req;
+                    event.data.ptr = (void *)req->conn_item;
                     event.events = EPOLLIN | EPOLLET | EPOLLONESHOT;
                     zv_epoll_add(epfd, infd, &event);
                     zv_add_timer(req, req->keep_alive_timeout_ms, zv_http_close_conn);// idle timeout
                 }
-            } 
-            else // 处理已连接套接字的事件
+            } else if (it->kind == ZV_EP_KIND_CGI_OUT) {
+                if (!r) continue;
+                /* CGI stdout is readable (or closed/error) */
+                zv_cgi_on_stdout_ready(r);
+                continue;
+            } else if (it->kind == ZV_EP_KIND_CGI_IN) {
+                /* GET-only MVP: not used */
+                continue;
+            } else // 处理已连接套接字的事件
             {
                 uint32_t ev = events[i].events;
                 // 处理错误事件
@@ -225,12 +246,12 @@ int zv_worker_run(zv_conf_t *cf, int worker_id) {
                 }
                 // 处理读事件
                 if (ev & EPOLLIN) {
-                    do_request(events[i].data.ptr);
+                    if (r) do_request(r);
                     continue;
                 }
                 // 处理写事件
                 if (ev & EPOLLOUT) {
-                    do_write(events[i].data.ptr);
+                    if (r) do_write(r);
                     continue;
                 }
                 // 处理挂起或半关闭事件
@@ -246,6 +267,9 @@ int zv_worker_run(zv_conf_t *cf, int worker_id) {
         }
         // 处理到期定时器
         zv_handle_expire_timers();
+
+        /* Safe point: now it is ok to return closed requests to freelist. */
+        zv_http_request_deferred_flush();
     }
 
     // best-effort cleanup

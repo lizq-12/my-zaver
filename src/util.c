@@ -106,41 +106,52 @@ int read_conf(char *filename, zv_conf_t *cf, char *buf, int len) {
         if (!delim_pos)
             return ZV_CONF_ERROR;
 
-        if (cur_pos[strlen(cur_pos) - 1] == '\n') {
-            cur_pos[strlen(cur_pos) - 1] = '\0';
+        size_t cur_len = strlen(cur_pos);
+        if (cur_len > 0 && cur_pos[cur_len - 1] == '\n') {
+            cur_pos[cur_len - 1] = '\0';
+            cur_len--;
+        }
+        while (cur_len > 0 && (cur_pos[cur_len - 1] == '\r' || cur_pos[cur_len - 1] == ' ' || cur_pos[cur_len - 1] == '\t')) {
+            cur_pos[cur_len - 1] = '\0';
+            cur_len--;
+        }
+
+        char *val = delim_pos + 1;
+        while (*val == ' ' || *val == '\t') {
+            val++;
         }
 
         if (strncmp("root", cur_pos, 4) == 0) {
-            cf->root = delim_pos + 1;
+            cf->root = val;
         }
 
         if (strncmp("port", cur_pos, 4) == 0) {
-            cf->port = atoi(delim_pos + 1);     
+            cf->port = atoi(val);
         }
 
         if (strncmp("threadnum", cur_pos, 9) == 0) {
-            cf->thread_num = atoi(delim_pos + 1);
+            cf->thread_num = atoi(val);
         }
 
         if (strncmp("workers", cur_pos, 7) == 0) {
-            cf->workers = atoi(delim_pos + 1);
+            cf->workers = atoi(val);
         }
 
         if (strncmp("cpu_affinity", cur_pos, 12) == 0) {
-            cf->cpu_affinity = atoi(delim_pos + 1);
+            cf->cpu_affinity = atoi(val);
         }
 
         if (strncmp("keep_alive_timeout_ms", cur_pos, 20) == 0) {
-            cf->keep_alive_timeout_ms = atoi(delim_pos + 1);
+            cf->keep_alive_timeout_ms = atoi(val);
         }
 
         if (strncmp("request_timeout_ms", cur_pos, 18) == 0) {
-            cf->request_timeout_ms = atoi(delim_pos + 1);
+            cf->request_timeout_ms = atoi(val);
         }
 
         /* alias: set both timeouts */
         if (strncmp("timeout_ms", cur_pos, 10) == 0) {
-            int t = atoi(delim_pos + 1);
+            int t = atoi(val);
             cf->keep_alive_timeout_ms = t;
             cf->request_timeout_ms = t;
         }
