@@ -11,7 +11,7 @@ The purpose of Zaver is to help developers understand how to write a high perfor
 
 ## programming model
 
-Zaver has evolved from a simple thread-pool model to a robust **Multi-Reactor Process Model**, designed to fully utilize multi-core processors.
+Zaver has evolved from a simple thread model to a robust **Multi-Reactor Process Model**, designed to fully utilize multi-core processors.
 
 * **Multi-Process Architecture**: Uses a Master-Worker model with **SO_REUSEPORT** for kernel-level load balancing, eliminating the "Thundering Herd" problem.
 * **Event Driven**: Based on **Epoll (Edge Triggered)** and Non-blocking I/O.
@@ -20,7 +20,7 @@ Zaver has evolved from a simple thread-pool model to a robust **Multi-Reactor Pr
 ## Key Features & Optimizations
 
 * **⚡ Extreme Performance**:
-    * **Zero-Copy**: Implemented `sendfile` and `mmap` to minimize user-kernel mode context switching and CPU data copying, achieving **8GB/s+ throughput** for large files.
+    * **Zero-Copy**: Implemented `sendfile` to minimize user-kernel mode context switching and CPU data copying, achieving **8GB/s+ throughput** for large files.
     * **CPU Affinity**: Supports binding worker processes to specific CPU cores to reduce cache thrashing and maximize L1/L2 cache hit rates.
 * **🧠 Memory Management**:
     * **Object Pool**: Custom allocator (Free List) for HTTP request objects to eliminate frequent `malloc/free` overhead and reduce memory fragmentation.
@@ -29,7 +29,11 @@ Zaver has evolved from a simple thread-pool model to a robust **Multi-Reactor Pr
     * **Path Sanitization**: robust protection against Path Traversal attacks (e.g., `../../etc/passwd`).
     * **CI/CD**: Integrated **GitHub Actions** for automated building and functional testing.
     * **Sanitizers**: Code is tested with **AddressSanitizer (ASan)** and **UndefinedBehaviorSanitizer (UBSan)** to ensure memory safety.
-    
+
+### Prerequisites
+* Linux Kernel 3.9 or later (for `SO_REUSEPORT`)
+* CMake & GCC/Clang
+
 ## compile and run
 
 please make sure you have [cmake](https://cmake.org/) installed.
@@ -37,6 +41,24 @@ please make sure you have [cmake](https://cmake.org/) installed.
 mkdir build && cd build
 cmake .. && make
 cd .. && ./build/zaver -c zaver.conf
+```
+
+## tests
+
+Functional + security regression:
+```bash
+chmod +x tests/functional_test.sh
+./tests/functional_test.sh
+```
+
+## performance benchmark
+
+Prerequisite: install `wrk`.
+
+Run a small suite (static small, static big, CGI) and write a Markdown summary to `tests/perf/results.md`:
+```bash
+chmod +x tests/perf/bench.sh
+BUILD_DIR=build THREADS=4 CONNS=500 DURATION=30s ./tests/perf/bench.sh
 ```
 
 ## support

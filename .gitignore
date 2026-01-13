@@ -19,3 +19,4 @@ bin/
 *.log
 # 忽略 临时测试大文件 (之前提过的)
 html/big_64m.bin
+html/big.bin
