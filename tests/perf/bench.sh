@@ -25,11 +25,21 @@ WRK_TIMEOUT="${WRK_TIMEOUT:-10s}"
 # - scan_conns: scan CONN_LIST for static small
 # - scan_threads: scan THREAD_LIST for static small
 # - scale_workers: scan WORKER_LIST, restarting server each time, for static small
+# - claims: Nginx-style headline checks (C10K, idle keep-alive RSS, single-core QPS, linear scalability hints)
 # - full: suite + scan_conns + scan_threads + scale_workers
 MODE="${MODE:-full}"
 CONN_LIST="${CONN_LIST:-50 100 200 500 1000}"
 WORKER_LIST="${WORKER_LIST:-1 2 4}"
 THREAD_LIST="${THREAD_LIST:-1 2 4 8}"
+
+# Nginx-style headline checks (best-effort, environment-dependent).
+C10K_CONN_LIST="${C10K_CONN_LIST:-1000 2000 5000 10000}"
+IDLE_KEEPALIVE_CONNS="${IDLE_KEEPALIVE_CONNS:-10000}"
+IDLE_KEEPALIVE_HOLD_SEC="${IDLE_KEEPALIVE_HOLD_SEC:-10}"
+P99_TARGET_MS="${P99_TARGET_MS:-5}"
+SINGLE_CORE_CONNS="${SINGLE_CORE_CONNS:-2000}"
+SINGLE_CORE_THREADS="${SINGLE_CORE_THREADS:-1}"
+ULIMIT_NOFILE="${ULIMIT_NOFILE:-}"
 
 BIG_FILE_MB="${BIG_FILE_MB:-256}"
 BIG_FILE_PATH_REL="${BIG_FILE_PATH_REL:-big.bin}"
@@ -93,6 +103,144 @@ cleanup() {
     fi
 }
 trap cleanup EXIT INT TERM
+
+TABLE_HEADER="| Case | URL | Workers | Threads | Conns | Duration | Runs | Requests/sec(mean) | Lat(avg) | Lat(stdev) | Lat(max) | p50 | p90 | p99 | Transfer/sec(mean) | Non2xx(sum) | Sockerr | Notes |"
+TABLE_SEP="|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---|"
+
+print_table_header() {
+    echo "$TABLE_HEADER"
+    echo "$TABLE_SEP"
+}
+
+print_section() {
+    local title="$1"
+    echo
+    echo "## ${title}"
+    echo
+}
+
+sum_rss_kb_tree() {
+    local pid="$1"
+    if ! command -v ps >/dev/null 2>&1; then
+        echo ""
+        return 0
+    fi
+
+    local pids="$pid"
+    if command -v pgrep >/dev/null 2>&1; then
+        local children
+        children=$(pgrep -P "$pid" 2>/dev/null || true)
+        if [[ -n "${children:-}" ]]; then
+            pids+=" ${children}"
+        fi
+    fi
+
+    # rss is in KiB.
+    ps -o rss= -p $pids 2>/dev/null | awk '{s+=$1} END { if(NR==0) print ""; else print s }'
+}
+
+run_idle_keepalive_mem_test() {
+    local url_path="$1"
+    local target_conns="$2"
+    local hold_sec="$3"
+
+    if ! command -v python3 >/dev/null 2>&1; then
+        echo "| Idle keep-alive RSS | N/A | N/A | N/A | python3 missing |"
+        return 0
+    fi
+
+    local rss_before rss_after
+    rss_before=$(sum_rss_kb_tree "$SERVER_PID")
+
+    local py_out
+    py_out=$(python3 - <<'PY'
+import os, socket, time, sys, re
+
+host = '127.0.0.1'
+port = int(os.environ.get('ZV_PORT', '3000'))
+path = os.environ.get('ZV_PATH', '/index.html')
+target = int(os.environ.get('ZV_TARGET', '10000'))
+hold = int(os.environ.get('ZV_HOLD', '10'))
+
+req = (f"GET {path} HTTP/1.1\r\n"
+       f"Host: {host}:{port}\r\n"
+       f"Connection: keep-alive\r\n"
+       f"User-Agent: zaver-bench\r\n"
+       f"\r\n").encode('ascii', 'strict')
+
+sock_list = []
+opened = 0
+
+def recv_until(sock, marker, limit=65536):
+    buf = b''
+    while marker not in buf:
+        chunk = sock.recv(4096)
+        if not chunk:
+            break
+        buf += chunk
+        if len(buf) > limit:
+            break
+    return buf
+
+for i in range(target):
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(3)
+        s.connect((host, port))
+        s.sendall(req)
+        hdr = recv_until(s, b"\r\n\r\n")
+        # best-effort: drain body if Content-Length exists.
+        m = re.search(br"\r\nContent-length:\s*([0-9]+)\r\n", hdr, re.IGNORECASE)
+        if m:
+            clen = int(m.group(1))
+            body = hdr.split(b"\r\n\r\n", 1)[1]
+            need = max(0, clen - len(body))
+            while need > 0:
+                chunk = s.recv(min(4096, need))
+                if not chunk:
+                    break
+                need -= len(chunk)
+        s.settimeout(None)
+        sock_list.append(s)
+        opened += 1
+    except OSError:
+        break
+
+print(f"opened={opened}")
+sys.stdout.flush()
+time.sleep(hold)
+
+for s in sock_list:
+    try:
+        s.close()
+    except Exception:
+        pass
+PY
+    )
+
+    rss_after=$(sum_rss_kb_tree "$SERVER_PID")
+
+    local opened
+    opened=$(echo "$py_out" | sed -nE 's/^opened=([0-9]+)\s*$/\1/p' | tail -n 1)
+    if [[ -z "${opened:-}" ]]; then
+        opened=0
+    fi
+
+    local delta_kb per_conn_b
+    if [[ -n "${rss_before:-}" && -n "${rss_after:-}" ]]; then
+        delta_kb=$((rss_after - rss_before))
+    else
+        delta_kb=""
+    fi
+
+    if [[ "$opened" -gt 0 && -n "${delta_kb:-}" ]]; then
+        per_conn_b=$(awk -v dk="$delta_kb" -v n="$opened" 'BEGIN{ printf "%.1f", (dk*1024)/n }')
+    else
+        per_conn_b="N/A"
+    fi
+
+    echo "| Idle keep-alive RSS (proc RSS only) | ${target_conns} | ${opened} | ${hold_sec}s | rss_kb_before=${rss_before:-N/A}; rss_kb_after=${rss_after:-N/A}; delta_kb=${delta_kb:-N/A}; bytes_per_conn=${per_conn_b} |"
+}
 
 stop_server() {
     if [[ -n "${SERVER_PID:-}" ]]; then
@@ -175,8 +323,25 @@ make_conf_with_workers() {
     fi
 }
 
+make_conf_with_kv() {
+    local key="$1"
+    local value="$2"
+    local in_path="$3"
+    local out_path="$4"
+
+    if grep -Eq "^[[:space:]]*${key}[[:space:]]*=" "$in_path"; then
+        sed -E "s/^[[:space:]]*${key}[[:space:]]*=.*/${key}=${value}/" "$in_path" >"$out_path"
+    else
+        cat "$in_path" >"$out_path"
+        echo "${key}=${value}" >>"$out_path"
+    fi
+}
+
 start_server() {
     local conf="$1"
+    if [[ -n "${ULIMIT_NOFILE:-}" ]]; then
+        (ulimit -n "$ULIMIT_NOFILE" 2>/dev/null) || true
+    fi
     ensure_port_free
     rm -f "$LOG_FILE"
     setsid "$BIN_PATH" -c "$conf" >"$LOG_FILE" 2>&1 &
@@ -310,6 +475,7 @@ run_wrk_case() {
     LAST_RPS_MEAN="$rps_mean"
     LAST_P99_MS_MEAN="$p99_ms_mean"
     LAST_XFER_MIBPS_MEAN="$xfer_mibps_mean"
+    LAST_LAT_AVG_MS_MEAN="$lat_avg_ms_mean"
 
     local notes=""
     if [[ "$non2xx_sum" -ne 0 ]]; then
@@ -361,31 +527,35 @@ main() {
         if [[ -n "${WORKERS_CONF:-}" ]]; then
             echo "- workers (from conf): ${WORKERS_CONF}"
         fi
-        echo
-        echo "| Case | URL | Workers | Threads | Conns | Duration | Runs | Requests/sec(mean) | Lat(avg) | Lat(stdev) | Lat(max) | p50 | p90 | p99 | Transfer/sec(mean) | Non2xx(sum) | Sockerr | Notes |"
-        echo "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---|"
 
         if [[ "$MODE" == "suite" || "$MODE" == "full" ]]; then
+            print_section "Suite"
+            print_table_header
             declare -A SUITE_RPS
             declare -A SUITE_P99_MS
+            declare -A SUITE_P99_OK
 
             WORKERS_LABEL="${WORKERS_CONF:-N/A}"
             start_server "$CONF_PATH"
             run_wrk_case "Static small" "${BASE_URL}/index.html"
             SUITE_RPS["Static small"]="${LAST_RPS_MEAN:-}"
             SUITE_P99_MS["Static small"]="${LAST_P99_MS_MEAN:-}"
+            SUITE_P99_OK["Static small"]=$(awk -v p99="${LAST_P99_MS_MEAN:-}" -v t="${P99_TARGET_MS}" 'BEGIN{ if(p99==""||p99=="N/A") print "N/A"; else if(p99<=t) print "PASS"; else print "FAIL" }')
 
             run_wrk_case "Static big (${BIG_FILE_MB}MiB)" "${BASE_URL}/${BIG_FILE_PATH_REL}"
             SUITE_RPS["Static big"]="${LAST_RPS_MEAN:-}"
             SUITE_P99_MS["Static big"]="${LAST_P99_MS_MEAN:-}"
+            SUITE_P99_OK["Static big"]=$(awk -v p99="${LAST_P99_MS_MEAN:-}" -v t="${P99_TARGET_MS}" 'BEGIN{ if(p99==""||p99=="N/A") print "N/A"; else if(p99<=t) print "PASS"; else print "FAIL" }')
 
             run_wrk_case "CGI" "${BASE_URL}/cgi-bin/hello.sh"
             SUITE_RPS["CGI"]="${LAST_RPS_MEAN:-}"
             SUITE_P99_MS["CGI"]="${LAST_P99_MS_MEAN:-}"
+            SUITE_P99_OK["CGI"]=$(awk -v p99="${LAST_P99_MS_MEAN:-}" -v t="${P99_TARGET_MS}" 'BEGIN{ if(p99==""||p99=="N/A") print "N/A"; else if(p99<=t) print "PASS"; else print "FAIL" }')
 
             run_wrk_case "404" "${BASE_URL}/no-such-file"
             SUITE_RPS["404"]="${LAST_RPS_MEAN:-}"
             SUITE_P99_MS["404"]="${LAST_P99_MS_MEAN:-}"
+            SUITE_P99_OK["404"]=$(awk -v p99="${LAST_P99_MS_MEAN:-}" -v t="${P99_TARGET_MS}" 'BEGIN{ if(p99==""||p99=="N/A") print "N/A"; else if(p99<=t) print "PASS"; else print "FAIL" }')
             stop_server
             echo
 
@@ -403,18 +573,28 @@ main() {
                     p99_k="${SUITE_P99_MS[$k]:-}"
 
                     local rps_ratio p99_ratio
-                    rps_ratio=$(awk -v a="$rps_k" -v b="$base_rps" 'BEGIN { if(a==""||b==""||b==0) print "N/A"; else printf "%.3f", a/b }')
+                    rps_ratio=$(awk -v a="$rps_k" -v b="$base_rps" 'BEGIN { if(a==""||b==""||b==0) print "N/A"; else printf "%.6f", a/b }')
                     p99_ratio=$(awk -v a="$p99_k" -v b="$base_p99" 'BEGIN { if(a==""||b==""||b==0) print "N/A"; else printf "%.3f", a/b }')
                     echo "| ${k} | ${rps_ratio} | ${p99_ratio} |"
                 done
                 echo
             fi
+
+            echo "## P99 Target Check (<= ${P99_TARGET_MS}ms)"
+            echo
+            echo "| Case | p99(ms) | Result |"
+            echo "|---|---:|---:|"
+            for k in "Static small" "Static big" "CGI" "404"; do
+                echo "| ${k} | ${SUITE_P99_MS[$k]:-N/A} | ${SUITE_P99_OK[$k]:-N/A} |"
+            done
+            echo
         fi
 
         if [[ "$MODE" == "scan_conns" || "$MODE" == "full" ]]; then
+            print_section "Conns Scan (Static small)"
+            print_table_header
             WORKERS_LABEL="${WORKERS_CONF:-N/A}"
             start_server "$CONF_PATH"
-            echo "| Conns scan (static small) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |"
             for c in $CONN_LIST; do
                 run_wrk_case_with_conns "Static small" "${BASE_URL}/index.html" "$c"
             done
@@ -423,10 +603,11 @@ main() {
         fi
 
         if [[ "$MODE" == "scan_threads" || "$MODE" == "full" ]]; then
+            print_section "Threads Scan (Static small)"
+            print_table_header
             local old_threads="$THREADS"
             WORKERS_LABEL="${WORKERS_CONF:-N/A}"
             start_server "$CONF_PATH"
-            echo "| Threads scan (static small) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |"
             for t in $THREAD_LIST; do
                 THREADS="$t"
                 run_wrk_case "Static small" "${BASE_URL}/index.html"
@@ -437,17 +618,88 @@ main() {
         fi
 
         if [[ "$MODE" == "scale_workers" || "$MODE" == "full" ]]; then
-            echo "| Workers scale (static small) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |"
+            print_section "Workers Scale (Static small)"
+            print_table_header
             local tmp_conf
             tmp_conf="${ROOT_DIR}/tests/perf/_tmp_zaver.conf"
+            declare -A SCALE_RPS
+
             for w in $WORKER_LIST; do
                 make_conf_with_workers "$w" "$tmp_conf"
                 WORKERS_LABEL="$w"
                 start_server "$tmp_conf"
                 run_wrk_case "Static small" "${BASE_URL}/index.html"
+                SCALE_RPS[$w]="${LAST_RPS_MEAN:-}"
                 stop_server
             done
             rm -f "$tmp_conf" || true
+            echo
+
+            # Summary: speedup and efficiency (best-effort)
+            local base_w
+            base_w=$(echo "$WORKER_LIST" | awk '{print $1; exit}')
+            local base_rps
+            base_rps="${SCALE_RPS[$base_w]:-}"
+            if [[ -n "${base_rps:-}" ]]; then
+                echo "### Scaling Summary"
+                echo
+                echo "| Workers | RPS(mean) | Speedup | Efficiency |"
+                echo "|---:|---:|---:|---:|"
+                for w in $WORKER_LIST; do
+                    local r
+                    r="${SCALE_RPS[$w]:-}"
+                    local speed eff
+                    speed=$(awk -v a="$r" -v b="$base_rps" 'BEGIN{ if(a==""||b==""||b==0) print "N/A"; else printf "%.3f", a/b }')
+                    eff=$(awk -v s="$speed" -v w="$w" 'BEGIN{ if(s=="N/A"||w==0) print "N/A"; else printf "%.3f", s/w }')
+                    echo "| ${w} | ${r:-N/A} | ${speed} | ${eff} |"
+                done
+                echo
+            fi
+        fi
+
+        if [[ "$MODE" == "claims" ]]; then
+            print_section "C10K / High Concurrency (Static small)"
+            print_table_header
+            WORKERS_LABEL="${WORKERS_CONF:-N/A}"
+            start_server "$CONF_PATH"
+            for c in $C10K_CONN_LIST; do
+                run_wrk_case_with_conns "Static small" "${BASE_URL}/index.html" "$c"
+            done
+            echo
+
+            echo "### Idle Keep-Alive Memory (best-effort)"
+            echo
+            echo "| Metric | Target conns | Opened conns | Hold | Result |"
+            echo "|---|---:|---:|---:|---|"
+            ZV_PORT="$PORT" ZV_PATH="/index.html" ZV_TARGET="$IDLE_KEEPALIVE_CONNS" ZV_HOLD="$IDLE_KEEPALIVE_HOLD_SEC" \
+                run_idle_keepalive_mem_test "/index.html" "$IDLE_KEEPALIVE_CONNS" "$IDLE_KEEPALIVE_HOLD_SEC"
+            echo
+
+            stop_server
+
+            print_section "Single-Core QPS (Static small, workers=1)"
+            print_table_header
+            local tmp_conf_sc tmp1 tmp2
+            tmp_conf_sc="${ROOT_DIR}/tests/perf/_tmp_zaver.single_core.conf"
+            tmp1="${ROOT_DIR}/tests/perf/_tmp_zaver.single_core.1.conf"
+            tmp2="${ROOT_DIR}/tests/perf/_tmp_zaver.single_core.2.conf"
+            make_conf_with_workers 1 "$tmp1"
+            make_conf_with_kv "cpu_affinity" 1 "$tmp1" "$tmp2"
+            mv "$tmp2" "$tmp_conf_sc"
+
+            local old_threads old_conns
+            old_threads="$THREADS"
+            old_conns="$CONNS"
+            THREADS="$SINGLE_CORE_THREADS"
+            CONNS="$SINGLE_CORE_CONNS"
+            WORKERS_LABEL=1
+            start_server "$tmp_conf_sc"
+            run_wrk_case "Static small (single-core config)" "${BASE_URL}/index.html"
+            stop_server
+
+            THREADS="$old_threads"
+            CONNS="$old_conns"
+            rm -f "$tmp_conf_sc" "$tmp1" 2>/dev/null || true
             echo
         fi
 
@@ -455,6 +707,11 @@ main() {
         echo "> Notes"
         echo "> - This benchmark assumes a single zaver instance owns the port (SO_REUSEPORT allows multiple instances)."
         echo "> - For stable results, run on an idle machine and set RUNS=3 (or higher)." 
+        echo "> - "
+        echo "> Nginx-style claims are environment-dependent:" 
+        echo "> - "
+        echo ">   - C10K/QPS depend on CPU/OS/tuning and client limits (ulimit)."
+        echo ">   - Idle keep-alive memory here measures process RSS only (kernel socket memory is not included)."
     } | tee "$OUT_MD"
 
     echo
